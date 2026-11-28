@@ -138,7 +138,7 @@ export function StrategyPanel({ strategy, onChange, drivers, onAddDriver, onRemo
 
   return <div className="strategyScreen">
     <div className="strategyHeading">
-      <div><div className="overline"><span className="limeDot"/> PITMASTER / RACE PLANNING</div><h1>Estratégia de pilotos<span>.</span></h1><p>Define o regulamento, planeia os stints e acompanha o que realmente aconteceu.</p></div>
+      <div><div className="overline"><span className="limeDot"/> PITMASTER / RACE PLANNING</div><h1>Estratégia<span>.</span></h1><p>O que já aconteceu fica bloqueado. Planeia ou simula apenas os turnos que faltam.</p></div>
       <div className="strategyHeaderActions"><button className="quietBtn" onClick={onResetRace}><RotateCcw size={16}/> Nova prova</button><button className="quietBtn" onClick={onBack}><ArrowLeft size={16}/> Voltar à corrida</button></div>
     </div>
 
@@ -164,6 +164,8 @@ export function StrategyPanel({ strategy, onChange, drivers, onAddDriver, onRemo
       <div className={`strategyScore strategyStatus ${good ? 'statusValid' : errors.length ? 'statusInvalid' : ''}`}><small>ESTADO DO PLANO</small><strong>{good ? 'VALIDADO' : errors.length ? 'REVER' : 'POR DEFINIR'}</strong><span>{good ? 'Cumpre as regras configuradas' : errors.length ? `${errors.length} ponto(s) a verificar` : 'Configura as regras e os turnos'}</span></div>
     </div>
 
+    <details className="strategyConfigDisclosure">
+      <summary><span><ClipboardList size={19}/><strong>Regras e pilotos</strong><small>{drivers.length} pilotos · regras configuradas na preparação da prova</small></span><ArrowDown size={18}/></summary>
     <div className="strategyTwoCols">
       <section className="card strategyConfig">
         <div className="cardHeading"><div><div className="overline">01 / REGULAMENTO</div><h2><ClipboardList size={21}/> Regras da corrida</h2><p>Campos vazios significam «não configurado».</p></div><span className="sectionTag">EDITÁVEL</span></div>
@@ -178,6 +180,7 @@ export function StrategyPanel({ strategy, onChange, drivers, onAddDriver, onRemo
         <div className="strategyHint"><Timer size={17}/> O tempo real é contado desde o início manual do turno no painel de corrida.</div>
       </section>
     </div>
+    </details>
 
     {actualAlerts.length > 0 && <section className="strategyActualAlerts" aria-live="polite"><div><AlertTriangle size={19}/><strong>Alertas dos turnos reais ({actualAlerts.length})</strong></div><ul>{actualAlerts.map((alert, index) => <li key={index}>{alert}</li>)}</ul></section>}
 

@@ -4,7 +4,7 @@ import {
   Activity, ArrowDown, ArrowRight, ArrowUp, Check, ChevronDown, CircleHelp, ClipboardList,
   Expand, Flag, FlagTriangleRight, Focus, Gauge, History,
   Link2, Pause, Play, Radio, Settings2, ShieldAlert, Timer, Unplug,
-  X, Zap, Layers3, AlertTriangle, Volume2, VolumeX, BarChart3, PartyPopper, LockKeyhole
+  X, Zap, Layers3, AlertTriangle, Volume2, VolumeX, BarChart3, PartyPopper, LockKeyhole, SlidersHorizontal
 } from 'lucide-react'
 import { emptyTiming, passageNeighbors, type TimingState } from './apex'
 import { paceSummary, lapPerformance } from './pace'
@@ -40,8 +40,10 @@ import { palmelaSprintRules, palmelaSprintPhases } from './sprintPreset'
 import {medianRaceLap,stintAlertStage,stintStagePriority,type StintAlertStage} from './stintAlerts'
 import {pitTransition,type PitObservation} from './pitAutomation'
 import {shouldCelebrate} from './finishCelebration'
+import {resumeAfterSimulation, type SessionOrigin} from './simulatorSession'
 import './style.css'
 import './visual-system.css'
+import './workflow.css'
 
 type Turn = { driver: string; startedAt: number; endedAt?: number }
 type DriverData = { names: string[]; turns: Turn[]; maxMinutes: number }
@@ -116,7 +118,7 @@ function App() {
   const [nextDriver, setNextDriver] = useState('')
   const [showSwap, setShowSwap] = useState(false)
   const [settingsOpen, setSettingsOpen] = useState(false)
-  const [view, setView] = useState<'race' | 'strategy' | 'setup' | 'ranking' | 'qualifying'>('race')
+  const [view, setView] = useState<'race' | 'strategy' | 'setup' | 'ranking' | 'qualifying'>(activeRace.status==='live'?'race':'setup')
   const [phases,setPhases]=useState<PhaseConfig>(()=>readPhases(localStorage.getItem(PHASES_STORE+activeRace.id)))
   const [qualSnapshots,setQualSnapshots]=useState<Partial<Record<RacePhase,TimingState>>>(()=>{try{return JSON.parse(localStorage.getItem(QUAL_SNAPSHOTS_STORE+activeRace.id)||'{}')}catch{return {}}})
   const [rankingMode,setRankingMode] = useState<'official'|'projected'>('official')
@@ -161,6 +163,8 @@ function App() {
   const raceConnection = useRef<TimingConnection | null>(null)
   const [showRaw, setShowRaw] = useState(false)
   const liveGeneration = useRef(0)
+  // The simulator must be an isolated, reversible preview, never the active race data.
+  const simulationOrigin = useRef<SessionOrigin<TimingState>|null>(null)
 
   // Navigating between race sections should not strand mobile users halfway down a long page.
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'auto' }) }, [view])
@@ -201,10 +205,12 @@ function App() {
   }, [collection])
   useEffect(()=>{try{localStorage.setItem(PROJECTION_STORE+activeRace.id,JSON.stringify(projectionSettings))}catch{/* quota */}},[activeRace.id,projectionSettings])
   useEffect(() => {
+    // Never persist sandbox kart selections into the real race workspace.
+    if(mode === 'sim') return
     try { localStorage.setItem(WORKSPACE_PREFIX + activeRace.id, JSON.stringify({
       raceId: activeRace.id, drivers, strategy, pitVisits, followedRivals, selectedKart
     })) } catch { /* browser quota */ }
-  }, [activeRace.id, drivers, strategy, pitVisits, followedRivals, selectedKart])
+  }, [activeRace.id, drivers, strategy, pitVisits, followedRivals, selectedKart, mode])
   useEffect(() => { if (!noticeAlert) return; const id=window.setTimeout(()=>setNoticeAlert(''),9000);return ()=>window.clearTimeout(id) }, [noticeAlert])
   useEffect(() => { if (!raceFlash) return; const id=window.setTimeout(()=>setRaceFlash(null),6500);return ()=>window.clearTimeout(id) }, [raceFlash])
   useEffect(() => () => { raceConnection.current?.disconnect() }, [])
@@ -422,11 +428,13 @@ function App() {
     } catch (error) { setConnectionError(error instanceof Error ? error.message : String(error)) }
   }
   function persistWorkspace() {
+    if(mode==='sim') return // sandbox selections never overwrite the real race
     try { localStorage.setItem(WORKSPACE_PREFIX + activeRace.id, JSON.stringify({
       raceId: activeRace.id, drivers, strategy, pitVisits, followedRivals, selectedKart
     })) } catch { /* browser quota */ }
   }
   function selectRace(id: string) {
+    simulationOrigin.current=null
     const next = collection.races.find(r => r.id === id)
     if (!next || next.id === activeRace.id) return
     persistWorkspace()
@@ -447,6 +455,7 @@ function App() {
   }
   function setRacesActive(id: string) { setCollection(c => ({...c, activeId:id})) }
   function makeRace() {
+    simulationOrigin.current=null
     persistWorkspace()
     disconnect()
     const next = createRace(`race-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`)
@@ -460,6 +469,7 @@ function App() {
     setLastReceivedAt(null);setView('setup')
   }
   function duplicateRace() {
+    simulationOrigin.current=null
     persistWorkspace()
     disconnect()
     const copy={...activeRace,id:`race-${Date.now()}-${Math.random().toString(36).slice(2,8)}`,name:`${activeRace.name} · Cópia`,sourceUrl:'',status:'preparation' as const,createdAt:Date.now()}
@@ -478,6 +488,7 @@ function App() {
     if (profile.kart !== activeRace.kart) setSelectedKart(profile.kart)
   }
   function removeRace(id: string) {
+    simulationOrigin.current=null
     if (collection.races.length < 2 || !window.confirm('Apagar esta prova e os dados guardados neste dispositivo?')) return
     disconnect()
     const remaining = collection.races.filter(r => r.id !== id)
@@ -505,6 +516,7 @@ function App() {
     } catch (error) { setImportMessage(error instanceof Error ? error.message : 'Não foi possível importar o JSON.') }
   }
   function useDemo() {
+    simulationOrigin.current=null
     disconnect()
     knownNotices.current = null
     setRaceFlash(null)
@@ -516,7 +528,25 @@ function App() {
     setConnectionError('')
     setSettingsOpen(false)
   }
+  function exitSimulation() {
+    if (mode !== 'sim') return
+    const origin=simulationOrigin.current
+    simulationOrigin.current=null
+    setSimulation(null)
+    setFocusMode(false)
+    setStintBanner(null)
+    setRaceFlash(null)
+    knownNotices.current=null
+    setSettingsOpen(false)
+    const restored=resumeAfterSimulation(origin)
+    setMode(restored.mode)
+    setData(restored.data ?? emptyTiming)
+    if(restored.kart !== null)setSelectedKart(restored.kart)
+    setConnectionError(restored.reconnectRequired?'Simulador fechado. Volta a ligar o Live Timing em Definições para retomar os dados reais.':'')
+    setView('race')
+  }
   function useSimulation() {
+    if(mode!=='sim') simulationOrigin.current={mode,data,kart:selectedKart}
     disconnect()
     const kart = selectedKart && demo.racers.some(r=>r.kart===selectedKart) ? selectedKart : '7'
     const sim = createSimulation(demo.racers, kart, drivers.names)
@@ -573,7 +603,7 @@ function App() {
   }
 
   function exportData() {
-    const bundle = { version: 'pitmaster-0.14', exportedAt: new Date().toISOString(), race: activeRace,
+    const bundle = { version: 'pitmaster-0.18', exportedAt: new Date().toISOString(), race: activeRace,
       drivers, strategy, pitVisits, followedRivals, projectionSettings, phases, qualSnapshots,
       timing: { title: data.title, session: data.session, track: data.track,
         racers: data.racers, lapHistory: data.lapHistory, passages: data.passages, raceControl: data.raceControl } }
@@ -595,7 +625,7 @@ function App() {
   function watchKart(kart: string) {
     setSelectedKart(kart)
     if (mode === 'sim') setSimulation(sim => sim ? { ...sim, selectedKart: kart } : sim)
-    setCollection(c => updateProfile(c, { ...activeRace, kart }))
+    if(mode!=='sim') setCollection(c => updateProfile(c, { ...activeRace, kart }))
   }
   function stageDriver(name: string) {
     setNextDriver(name)
@@ -614,12 +644,12 @@ function App() {
       <div className="brand" aria-label="Pitmaster">
         <div className="brandMark"><Flag size={22} strokeWidth={2.8}/><span className="markPulse"/></div>
         <div className="brandType"><strong>PIT<span>MASTER</span><span className="brandPeriod">.</span></strong><small>RACE INTELLIGENCE</small></div>
-        <span className="version">BETA / 0.16</span>
+        <span className="version">BETA / 0.18</span>
       </div>
       <nav className="pageNav" aria-label="Secções do Pitmaster">
         <button className={view === 'setup' ? 'selected' : ''} onClick={() => { setView('setup'); setFocusMode(false) }}><Flag size={17}/> Provas</button>
+        <button className={view === 'qualifying' ? 'selected' : ''} onClick={() => {setView('qualifying');setFocusMode(false)}}><Flag size={17}/> Qualificação</button>
         <button className={view === 'race' ? 'selected' : ''} onClick={() => setView('race')}><Gauge size={17}/> Corrida</button>
-        <button className={view === 'qualifying' ? 'selected' : ''} onClick={() => {setView('qualifying');setFocusMode(false);setPhases(p=>PHASES_WITH_TIMING.includes(p.current)?p:{...p,current:'qualifying'})}}><Flag size={17}/> Qualificação</button>
         <button className={view === 'ranking' ? 'selected' : ''} onClick={() => {setView('ranking');setFocusMode(false)}}><FlagTriangleRight size={17}/> Classificação</button>
         <button className={view === 'strategy' ? 'selected' : ''} onClick={() => { setView('strategy'); setFocusMode(false) }}><ClipboardList size={17}/> Estratégia</button>
       </nav>
@@ -630,11 +660,17 @@ function App() {
         {view === 'race' && <button className={`navBtn ${focusMode ? 'active' : ''}`} onClick={() => setFocusMode(f => !f)} title={focusMode ? 'Sair do modo foco' : 'Modo foco'}>
           {focusMode ? <Expand size={17}/> : <Focus size={17}/>}<span>{focusMode ? 'Vista normal' : 'Modo foco'}</span>
         </button>}
-        <button className="navBtn simQuickLaunch" onClick={useSimulation} title="Abrir o simulador de corrida"><Layers3 size={16}/> <span>Simulador</span></button>
+        {mode==='sim'?<button className="navBtn simExitTop" onClick={exitSimulation} title="Sair do simulador e regressar à prova real"><X size={17}/> <span>Sair do simulador</span></button>
+          :<button className="navBtn simQuickLaunch" onClick={useSimulation} title="Experimentar com dados fictícios"><Layers3 size={16}/> <span>Simular</span></button>}
         <button className={`iconBtn ${soundOn ? 'soundOn' : 'soundOff'}`} onClick={() => {if(!soundOn)armAudio();setSoundOn(v=>!v)}} title={soundOn?'Desativar som das ocorrências':'Ativar som das ocorrências'} aria-label={soundOn?'Desativar som dos avisos':'Ativar som dos avisos'} aria-pressed={soundOn}>{soundOn?<Volume2 size={20}/>:<VolumeX size={20}/>}</button>
         <button className="iconBtn" onClick={() => setSettingsOpen(true)} title="Definições"><Settings2 size={21}/></button>
       </div>
     </header>
+    <div className="activeRaceStrip" role="group" aria-label="Prova e etapa atuais">
+      <div className="activeRaceName"><span>PROVA SELECIONADA</span><strong>{activeRace.name}</strong><small>{activeRace.track || 'Pista por definir'}</small></div>
+      <div className="activeRaceStage"><span>FASE CONFIGURADA</span><strong>{PHASES.find(p=>p.value===phases.current)?.label || 'Preparação'}</strong></div>
+      <button type="button" className="activeRaceConfig" onClick={()=>setView('setup')}><Settings2 size={15}/> Preparar</button>
+    </div>
 
     {stintBanner&&hudDriver&&!pits.active&&<div className={`stintWarningRibbon alert-${stintBanner.stage}`} role="alert"><AlertTriangle size={21}/><div><strong>{stintBanner.stage==='limit'?'STINT MÁXIMO ATINGIDO':stintBanner.stage==='one'?'BOX URGENTE':stintBanner.stage==='two'?'BOX IMINENTE':'PREPARAR BOX'}</strong><span>{stintBanner.stage==='limit'?'Confirma a entrada na box.':`~${stintBanner.stage==='four'?4:stintBanner.stage==='two'?2:1} volta(s) até ao limite · ${clock(Math.max(0,limitLeft??0))}`}</span></div><button onClick={()=>setStintBanner(null)} aria-label="Dispensar aviso"><X size={18}/></button></div>}
     {waitingPit&&!pitConfirmOpen&&<button className="pitConfirmNudge" onClick={()=>{setPitConfirmDriver(waitingPit.driverConfirmed||strategy.plan[drivers.turns.length-1]?.driver||drivers.names[0]||'');setPitConfirmOpen(true)}}><LockKeyhole size={17}/> Confirmar o piloto que entrou no pit <ArrowRight size={15}/></button>}
@@ -648,9 +684,9 @@ function App() {
         onDuplicate={duplicateRace} onCreate={makeRace} onSelect={selectRace} onRemove={removeRace}
         onUpdate={updateRace} onViewRace={()=>setView('race')} onViewStrategy={()=>setView('strategy')} onViewQualifying={()=>{setView('qualifying');setPhases(p=>({...p,current:'qualifying'}))}} phaseLabel={PHASES.find(p=>p.value===phases.current)?.label||'Preparação'}
         qualifyingMinutes={phases.qualifyingMinutes} onPalmelaSprintPreset={()=>{
-          const today='2026-11-29'
+          const today=new Date().toLocaleDateString('sv-SE')
           const existing=activeRace
-          updateRace({...existing,name:existing.name==='Primeira prova'||existing.name==='Nova prova'?'Palmela · Qualificação 10 + Corrida 30':existing.name,track:'KIP Palmela',date:today,status:'preparation'})
+          updateRace({...existing,name:existing.name==='Primeira prova'||existing.name==='Nova prova'?'Palmela · Qualificação 10 + Corrida 30':existing.name,track:'KIP Palmela',date:existing.date||today,status:'preparation'})
           setStrategy(prev=>({...prev,rules:palmelaSprintRules(prev.rules),plan:[]}))
           setPhases(prev=>palmelaSprintPhases(prev))
         }}
@@ -660,7 +696,7 @@ function App() {
       : view === 'race' ? <>
       <div className="raceHeader">
         <div className="raceIdentity">
-          <div className="overline"><span className="limeDot"/> RACE COMMAND CENTER <span className="headerSlash">/</span> {mode === 'sim' ? 'SIMULAÇÃO' : mode === 'demo' ? 'REPLAY' : mode === 'import' ? 'IMPORTAÇÃO' : mode === 'empty' ? 'SEM FEED' : 'LIVE TIMING'}</div>
+          <div className="overline"><span className="limeDot"/> CORRIDA / EM DIRETO <span className="headerSlash">/</span> {mode === 'sim' ? 'SIMULAÇÃO' : mode === 'demo' ? 'REPLAY' : mode === 'import' ? 'IMPORTAÇÃO' : mode === 'empty' ? 'SEM FEED' : 'LIVE TIMING'}</div>
           <h1>{mode === 'empty' ? activeRace.name : data.title || activeRace.name || 'A aguardar corrida'}</h1>
           <p><FlagTriangleRight size={15}/>{value(data.track || activeRace.track)}<span className="separator">/</span>{value(data.session || activeRace.name)}</p>
         </div>
@@ -681,10 +717,10 @@ function App() {
         <div className="simHead"><div><div className="overline">RACE LAB · SIMULAÇÃO 100% FICTÍCIA</div><h2><Layers3 size={19}/> Race Simulator <span className="simClock">{clock(simulation.timeMs)}</span></h2><p>Alterações não afetam pilotos, provas nem paragens reais.</p></div>
           <div className="simButtons"><button className="solidBtn" onClick={()=>setSimulation(old=>old?{...old,running:!old.running}:old)}>{simulation.running?<Pause size={15}/>:<Play size={15}/>} {simulation.running?'Pausar':'Continuar'}</button>
           <select className="simSelect" aria-label="Velocidade da simulação" value={simulation.speed} onChange={e=>setSimulation(old=>old?{...old,speed:Number(e.target.value) as SimulationSpeed}:old)}>{[1,5,20,60].map(v=><option key={v} value={v}>{v}×</option>)}</select>
-          <button className="quietBtn" onClick={useSimulation}>Reiniciar</button></div></div>
-        <div className="simScenario"><span>CONDIÇÕES:</span>{([['normal','Normal'],['slow-track','Pista lenta'],['slow-us','A nossa equipa lenta'],['push','Ataque']] as const).map(([id,label])=><button key={id} className={simulation.scenario===id?'isActive':''} onClick={()=>setSimScenario(id)}>{label}</button>)}</div>
+          <button className="quietBtn" onClick={useSimulation}>Reiniciar</button><button className="simLeaveBtn" onClick={exitSimulation}><X size={16}/> Sair do simulador</button></div></div>
+        <details className="simAdvanced"><summary><SlidersHorizontal size={15}/> Cenários e eventos de teste <ChevronDown size={16}/></summary><div className="simScenario"><span>CONDIÇÕES:</span>{([['normal','Normal'],['slow-track','Pista lenta'],['slow-us','A nossa equipa lenta'],['push','Ataque']] as const).map(([id,label])=><button key={id} className={simulation.scenario===id?'isActive':''} onClick={()=>setSimScenario(id)}>{label}</button>)}</div>
         <div className="simEvents"><span>PROVOCAR:</span><button onClick={()=>simIncident('warning',selectedKart)}>Warning nosso</button><button onClick={()=>simIncident('penalty',selectedKart)}>Penalização nossa</button><button onClick={()=>simIncident('warning',rivalKarts[0] || racers.find(r=>r.kart!==selectedKart)?.kart || selectedKart)}>Warning rival</button><button onClick={simPit}>Entrada nas boxes</button></div>
-        <div className="simLog">{simulation.log.slice(0,3).map(e=><span key={e.id}><b>{clock(e.atMs)}</b> {e.text}</span>)}</div>
+        <div className="simLog">{simulation.log.slice(0,3).map(e=><span key={e.id}><b>{clock(e.atMs)}</b> {e.text}</span>)}</div></details>
       </section>}
       <div className="heroMetrics">
         <section className="metric positionMetric">
@@ -700,12 +736,6 @@ function App() {
             <div className="lapTimeLine best"><span>MELHOR</span><strong>{value(mine?.bestLap)}</strong></div>
           </div><div className="lapMetricInsight"><span>{lastLapDeltaMs===null?'Sem volta anterior para comparar':`${lastLapDeltaMs<=0?'Melhorou':'Piorou'} ${formatDelta(lastLapDeltaMs)} face à anterior`}</span><small>{lastVsBest===null?'Sem melhor volta':`${formatDelta(lastVsBest)} da melhor volta`}</small></div>
         </button>
-        <button type="button" className={`metric lapHeroMetric ${lapRank ? 'lapHeroActive' : ''}`} onClick={()=>setPaceOpen(true)} aria-label="Abrir análise Lap Performance">
-          <span className="metricLabel"><Layers3 size={14}/> LAP PERFORMANCE</span>
-          <strong className="lapHeroValue">{lapRank ? `TOP ${lapRank.rank}` : '—'}</strong>
-          <span className="lapHeroSub">{lapRank ? `${lapRank.projected ? 'PROJEÇÃO' : 'VOLTA CONCLUÍDA'} · ${lapRank.total} karts` : 'A aguardar voltas comparáveis'}</span>
-          <span className="lapHeroLink">ANALISAR RITMO <ArrowRight size={13}/></span>
-        </button>
         <button type="button" className="metric projectedHeroMetric" onClick={()=>setProjectionOpen(true)}>
           <div className="metricLabel">FINAL PROJETADO <ArrowRight size={15}/></div>
           <div className="projectedHeroValue">{projectedNeighbors.ours?`P${projectedNeighbors.ours.predictedPosition}`:'—'}</div>
@@ -713,15 +743,6 @@ function App() {
           <span className="projectedHeroNote">{projection.reasons.length?'Configurar previsão':'Estimativa · confiança '+projection.confidence}</span>
         </button>
       </div>
-
-      <section className={`paceSpotlight ${paceReadout ? `pace-${paceReadout.tone}` : ''}`} aria-label="Pace Intelligence: comparação do ritmo com o pelotão">
-        <div className="paceSpotlightTitle"><div className="overline"><Activity size={16}/> PACE INTELLIGENCE · RITMO VS PELOTÃO</div><h2>Estamos realmente mais rápidos ou lentos?</h2><p>Comparamos as últimas 5 voltas válidas da nossa equipa com o ritmo recente dos outros karts.</p></div>
-        {pace && paceReadout ? <>
-          <div className="paceMainReadout"><small>{paceReadout.label}</small><strong>{paceReadout.headline}</strong><span>{paceReadout.detail}</span></div>
-          <div className="paceQuickCompare"><div><span>NÓS</span><strong>{(pace.ownMedianMs/1000).toFixed(3)}s</strong></div><span className="paceVs">VS</span><div><span>PELOTÃO</span><strong>{(pace.fieldMedianMs/1000).toFixed(3)}s</strong></div><small>{paceReadout.comparison}</small></div>
-        </> : <div className="paceWaiting"><strong>SEM VOLTAS PARA COMPARAR</strong><span>{mode==='demo'?'O arquivo de Palmela só inclui o estado final. Não tem o histórico completo das voltas.':mode==='empty'?'Liga uma cronometragem ou inicia uma simulação.':'São necessárias pelo menos duas voltas válidas nossas e dos adversários.'}</span>{mode!=='sim'&&<button className="paceTrySim" onClick={useSimulation}><Play size={15}/> Experimentar com corrida simulada</button>}</div>}
-        <button type="button" className="paceDetailsLink" onClick={()=>setPaceOpen(true)}>COMO FUNCIONA <ArrowRight size={15}/></button>
-      </section>
 
       <div className={`commandStrip ${turnExceeded ? 'commandCritical' : turnWarning || noticeAlert ? 'commandWarning' : ''}`} role="status" aria-live="polite">
         <div className="commandMain">
@@ -771,12 +792,25 @@ function App() {
           <button className="pitAction" disabled={mode==='sim' && !!simulation?.participants.find(p=>p.kart===selectedKart)?.pitUntilMs} title="Registo manual de reserva quando não há evento fiável do Live Timing" onClick={mode==='sim'?simPit:pits.active?exitPit:enterPit}>{mode==='sim' ? 'SIMULAR PIT' : pits.active ? 'REGISTAR SAÍDA' : 'REGISTAR ENTRADA'} <ArrowRight size={14}/></button><button type="button" className="pitDetailsBtn" onClick={()=>setPitsOpen(true)}><BarChart3 size={15}/> Ver gráfico das paragens</button>
         </div>
       </div>
+      {pits.shortVisits.length > 0 && <div className="pitNotice"><AlertTriangle size={16}/> {pits.shortVisits.length} paragem(ns) registada(s) abaixo do mínimo configurado. Verifica o regulamento.</div>}
+      <details className="raceAnalyticsDisclosure" aria-label="Análise aprofundada">
+        <summary><span><BarChart3 size={20}/><strong>Análise avançada</strong><small>Pace Intelligence, Lap Performance, ORACLE e Race Control</small></span><ChevronDown size={20}/></summary>
+        <div className="advancedLapMetric"><div><span className="overline">LAP PERFORMANCE</span><strong>{lapRank ? `Top ${lapRank.rank} de ${lapRank.total}` : 'Ainda sem voltas comparáveis'}</strong><small>{lapRank?.projected?'Volta projetada':'Volta concluída'}</small></div><button className="quietBtn" onClick={()=>setPaceOpen(true)}>Analisar voltas <ArrowRight size={15}/></button></div>
+      <section className={`paceSpotlight ${paceReadout ? `pace-${paceReadout.tone}` : ''}`} aria-label="Pace Intelligence: comparação do ritmo com o pelotão">
+        <div className="paceSpotlightTitle"><div className="overline"><Activity size={16}/> PACE INTELLIGENCE · RITMO VS PELOTÃO</div><h2>Estamos realmente mais rápidos ou lentos?</h2><p>Comparamos as últimas 5 voltas válidas da nossa equipa com o ritmo recente dos outros karts.</p></div>
+        {pace && paceReadout ? <>
+          <div className="paceMainReadout"><small>{paceReadout.label}</small><strong>{paceReadout.headline}</strong><span>{paceReadout.detail}</span></div>
+          <div className="paceQuickCompare"><div><span>NÓS</span><strong>{(pace.ownMedianMs/1000).toFixed(3)}s</strong></div><span className="paceVs">VS</span><div><span>PELOTÃO</span><strong>{(pace.fieldMedianMs/1000).toFixed(3)}s</strong></div><small>{paceReadout.comparison}</small></div>
+        </> : <div className="paceWaiting"><strong>SEM VOLTAS PARA COMPARAR</strong><span>{mode==='demo'?'O arquivo de Palmela só inclui o estado final. Não tem o histórico completo das voltas.':mode==='empty'?'Liga uma cronometragem ou inicia uma simulação.':'São necessárias pelo menos duas voltas válidas nossas e dos adversários.'}</span>{mode!=='sim'&&<button className="paceTrySim" onClick={useSimulation}><Play size={15}/> Experimentar com corrida simulada</button>}</div>}
+        <button type="button" className="paceDetailsLink" onClick={()=>setPaceOpen(true)}>COMO FUNCIONA <ArrowRight size={15}/></button>
+      </section>
+
+
       <section className="oracleCard" aria-label="Pitmaster ORACLE">
         <div className="oracleHeader"><div><div className="overline">PITMASTER ORACLE · PIT WINDOW INTELLIGENCE</div><h2><Zap size={20}/> Parar agora ou esperar?</h2></div><span className="sectionTag">{mode==='sim'?'MODELO EXPERIMENTAL':'AGUARDA SIMULAÇÃO'}</span></div>
         {mode === 'sim' && oracle ? <><div className="oracleOptions">{[oracle.now,oracle.later].map((w,i)=><div className={`oracleOption ${oracle.advantageSeconds>1.5 ? (i===1?'preferred':'') : oracle.advantageSeconds< -1.5 && i===0?'preferred':''}`} key={i}><span>{i===0?'PIT AGORA':'PIT EM 2 VOLTAS'}</span><strong>{w.trafficCostSeconds.toFixed(1)} s</strong><small>Custo de tráfego simulado</small><p>À frente: {w.aheadKart?`${racers.find(r=>r.kart===w.aheadKart)?.name||`Kart #${w.aheadKart}`} · #${w.aheadKart} · ${w.aheadSeconds?.toFixed(1)} s`:'—'}</p><p>Atrás: {w.behindKart?`${racers.find(r=>r.kart===w.behindKart)?.name||`Kart #${w.behindKart}`} · #${w.behindKart} · ${w.behindSeconds?.toFixed(1)} s`:'—'}</p></div>)}</div><div className="oracleVerdict"><Zap size={16}/><strong>{oracle.recommendation}</strong><span>Diferença estimada: {Math.abs(oracle.advantageSeconds).toFixed(1)} s</span></div><button type="button" className="pitDetailsBtn" onClick={()=>setOracleOpen(true)}><BarChart3 size={15}/> Comparar janelas em gráfico <ArrowRight size={14}/></button><p className="oracleFoot">Simulação ilustrativa: ritmo congelado, pit de 55 s e uma penalização heurística por tráfego. Não representa previsão real, classificação projetada ou recomendação regulamentar.</p></>
         : <p className="hint">Abre o simulador para comparar janelas fictícias. Dados Apex ou RaceFacer não são suficientes para apresentar esta previsão como fiável.</p>}
       </section>
-      {pits.shortVisits.length > 0 && <div className="pitNotice"><AlertTriangle size={16}/> {pits.shortVisits.length} paragem(ns) registada(s) abaixo do mínimo configurado. Verifica o regulamento.</div>}
 
       <section className="card rcCard" aria-label="Race Control Intelligence">
         <div className="rcCol rcMine">
@@ -810,6 +844,7 @@ function App() {
           {followedRivals.length > 0 && <div className="rcPinned">{followedRivals.map(kart => <button key={kart} onClick={() => setFollowedRivals(rivals => rivals.filter(k => k !== kart))} title={`Deixar de seguir #${kart}`}>#{kart} <X size={12}/></button>)}</div>}
         </div>
       </section>
+      </details>
 
 
       </> : <StrategyPanel

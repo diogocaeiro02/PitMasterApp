@@ -1,4 +1,8 @@
-# PITMASTER V0.17 — PALMELA 10+30
+# Pitmaster V0.18 — Fluxo de prova e interface limpa
+
+Consulta `RELEASE-NOTES-V0.18.md` para novidades e limitações.
+
+# HISTÓRICO: V0.17 — PALMELA 10+30
 
 Para publicar no GitHub e na Vercel, ler primeiro **README-DEPLOY-VERCEL.md**.
 

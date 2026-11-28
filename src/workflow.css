@@ -1,0 +1,114 @@
+/* Pitmaster 0.18 — fast pit-lane workflow. Override older ornamental card styles. */
+:root{--pit-frame:#111b26;--pit-divider:#2a3d4d;--pit-text:#f2f7fc;--pit-muted:#aabed0;--pit-radius:16px}
+.app{background:#0b121a;color:var(--pit-text)}
+.ambient{opacity:.17;pointer-events:none}
+.topbar{background:#0f1822!important;border-color:#26394b!important}
+.brand .version{color:#a7bac8}
+.activeRaceStrip{max-width:1690px;margin:0 auto;padding:10px clamp(20px,3vw,54px);display:flex;align-items:center;gap:26px;border-bottom:1px solid #253747;background:linear-gradient(90deg,rgba(21,37,48,.75),rgba(12,21,30,.8));min-width:0}
+.activeRaceName{display:flex;align-items:baseline;gap:10px;min-width:0;flex:1}
+.activeRaceStrip span{color:#90a8bd;font-size:10px;font-weight:800;letter-spacing:.08em}
+.activeRaceStrip strong{color:#f3f8fc;max-width:35ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px;font-weight:780}
+.activeRaceStrip small{color:#8ea5b8;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.activeRaceStage{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.activeRaceStage strong{color:#bcf9a2}
+.activeRaceConfig{display:flex;align-items:center;gap:7px;min-height:34px;padding:7px 12px;border:1px solid #385266;background:#203044;color:#d9e8f4;border-radius:9px;font-size:11px;font-weight:760;cursor:pointer;flex:none}
+.activeRaceConfig:hover{background:#30465d}
+/* One glance should suffice: three readable core metrics; the rest are intentionally hidden. */
+.workspace--race .raceHeader{margin-bottom:18px!important}
+.workspace--race .heroMetrics{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14px!important;margin-bottom:16px!important}
+.workspace--race .heroMetrics>.metric{min-height:146px!important;border-radius:14px!important;padding:19px 21px!important;display:flex;flex-direction:column;justify-content:center;min-width:0}
+.workspace--race .heroMetrics>.metric:nth-child(3){--instrument:#c7a7ff;background:linear-gradient(142deg,#312840,#201d34)!important;border-color:#695481!important}
+.workspace--race .heroMetrics .metricLabel{font-size:11px!important;letter-spacing:.035em!important;color:#cbd9e8!important}
+.workspace--race .heroMetrics .positionValue,.workspace--race .heroMetrics .projectedHeroValue{font-size:clamp(30px,3vw,45px);line-height:1.13}
+.workspace--race .heroMetrics .metricSub{font-size:11px}
+.workspace--race .heroMetrics .lapTimeLine strong{font-size:clamp(18px,2.4vw,27px);line-height:1.1}
+.workspace--race .heroMetrics .lapMetricInsight{font-size:11px}
+.workspace--race .commandStrip{margin:0 0 16px!important;min-height:91px;border-radius:14px;padding:16px 21px}
+.workspace--race .dashboardGrid{margin-bottom:16px;align-items:start;gap:16px}
+.workspace--race .dashboardGrid .card{min-width:0;border-radius:14px}
+.workspace--race .intelligenceGrid{margin-bottom:16px!important}
+.workspace--race .intelligenceGrid .intelTile{min-height:115px;padding:16px 19px}
+.raceAnalyticsDisclosure,.strategyConfigDisclosure,.qualificationOptions,.rankingProjectionOptions{border-radius:14px;border:1px solid #395169;background:#152334;margin:16px 0 20px;min-width:0;overflow:hidden}
+.raceAnalyticsDisclosure>summary,.strategyConfigDisclosure>summary,.qualificationOptions>summary,.rankingProjectionOptions>summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:14px;cursor:pointer;min-height:65px;padding:17px 20px;color:#e9f4ff}
+.raceAnalyticsDisclosure>summary::-webkit-details-marker,.strategyConfigDisclosure>summary::-webkit-details-marker,.qualificationOptions>summary::-webkit-details-marker,.rankingProjectionOptions>summary::-webkit-details-marker{display:none}
+.raceAnalyticsDisclosure>summary>span,.strategyConfigDisclosure>summary>span{display:flex;align-items:center;gap:11px;flex-wrap:wrap;min-width:0}
+.raceAnalyticsDisclosure>summary strong,.strategyConfigDisclosure>summary strong{font-size:14px;font-weight:800;letter-spacing:.02em}
+.raceAnalyticsDisclosure>summary small,.strategyConfigDisclosure>summary small{font-size:11px;color:#a8bed1;flex:1 1 200px}
+.raceAnalyticsDisclosure>summary svg,.strategyConfigDisclosure>summary svg,.qualificationOptions>summary svg{color:#b9daef;flex:none}
+.raceAnalyticsDisclosure[open]>summary,.strategyConfigDisclosure[open]>summary,.qualificationOptions[open]>summary,.rankingProjectionOptions[open]>summary{border-bottom:1px solid #33495b;background:#1a2c3f}
+.raceAnalyticsDisclosure[open]>summary>svg:last-child,.strategyConfigDisclosure[open]>summary>svg:last-child,.qualificationOptions[open]>summary>svg:last-child{transform:rotate(180deg)}
+.raceAnalyticsDisclosure>.paceSpotlight,.raceAnalyticsDisclosure>.oracleCard,.raceAnalyticsDisclosure>.rcCard{margin:16px!important;max-width:calc(100% - 32px);width:auto}
+.raceAnalyticsDisclosure .rcCard{margin-bottom:18px!important}
+.advancedLapMetric{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:16px 16px 0;padding:16px 20px;background:#232945;border:1px solid #5b537c;border-radius:12px}
+.advancedLapMetric>div{display:grid;gap:5px}.advancedLapMetric strong{font-size:18px;color:#e2d5ff}.advancedLapMetric small{font-size:11px;color:#b8c2db}
+.strategyConfigDisclosure{margin:0 0 16px}
+.strategyConfigDisclosure .strategyTwoCols{padding:16px;gap:12px;margin:0!important}
+.strategyConfigDisclosure .strategyTwoCols>.card{height:auto;min-width:0}
+.strategyScreen .strategyPlanner{margin-top:0}
+.qualificationOptions>summary{font-size:13px;font-weight:800}
+.qualificationOptions>summary>span{display:flex;align-items:center;gap:10px}
+.qualificationOptions .qualSetup{margin:14px;border:0;background:#1b2b3c}
+.rankingProjectionOptions{margin:0 0 16px}
+.rankingProjectionOptions>summary{font-size:13px;font-weight:800}
+.rankingProjectionOptions>summary>span{font-size:11px;color:#b3cde3;font-weight:650;margin-left:auto}
+.rankingProjectionOptions .projectionMethod{margin:14px;max-width:calc(100% - 28px);box-sizing:border-box}
+.simConsole{background:linear-gradient(120deg,#20253c,#13283a)!important;border-color:#6a588d!important;padding:16px 20px!important;margin-bottom:16px!important}
+.simConsole .simHead{gap:16px;align-items:center}
+.simLeaveBtn{min-height:39px;padding:9px 13px;border-radius:10px;border:1px solid #b76d73;background:#44272d;color:#ffe0e1;font:inherit;font-size:12px;font-weight:800;display:inline-flex;align-items:center;gap:7px;cursor:pointer}
+.simExitTop{border-color:#b9747e!important;background:#4b2b32!important;color:#ffd9df!important}
+.simAdvanced{border-top:1px solid #485674;margin-top:12px;padding-top:10px}
+.simAdvanced>summary{cursor:pointer;display:flex;align-items:center;gap:9px;color:#d9c9ff;font-size:12px;font-weight:750;padding:10px 0;list-style:none}
+.simAdvanced>summary::-webkit-details-marker{display:none}.simAdvanced>summary svg:last-child{margin-left:auto}
+.simAdvanced[open]>summary svg:last-child{transform:rotate(180deg)}
+.simConsole .simScenario,.simConsole .simEvents{padding:8px 0}
+:where(.workspace) .commandHint,:where(.workspace) .neighborGap,.stintHudDigits{font-variant-numeric:tabular-nums lining-nums}
+@media(max-width:1100px){
+ .activeRaceStrip{padding-inline:22px}
+ .activeRaceName span{display:none}
+ .activeRaceStage span{display:none}
+ .workspace--race .heroMetrics{gap:10px!important}
+ .workspace--race .heroMetrics>.metric{padding:15px!important}
+}
+@media(max-width:720px){
+ .activeRaceStrip{padding:8px 15px;gap:9px;min-height:44px}
+ .activeRaceName{display:flex;gap:4px;flex-direction:column;align-items:flex-start}
+ .activeRaceName strong{font-size:12px;max-width:30ch}
+ .activeRaceName small{font-size:10px;max-width:30ch}
+ .activeRaceStage{display:none}
+ .activeRaceConfig{font-size:11px;min-height:36px;padding:7px 10px}
+ .workspace--race .heroMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+ .workspace--race .heroMetrics>.metric{padding:13px!important;min-height:117px!important}
+ .workspace--race .heroMetrics>.metric:nth-child(3){grid-column:span 2;min-height:94px!important}
+ .workspace--race .heroMetrics .metricLabel{font-size:10px!important}
+ .workspace--race .heroMetrics .positionValue{font-size:38px}
+ .workspace--race .heroMetrics .lapTimeLine strong{font-size:clamp(16px,4.4vw,24px)}
+ .workspace--race .commandStrip{padding:13px!important;gap:10px}
+ .raceAnalyticsDisclosure>summary,.strategyConfigDisclosure>summary{padding:15px 13px;min-height:56px}
+ .raceAnalyticsDisclosure>summary small,.strategyConfigDisclosure>summary small{font-size:10px}
+ .raceAnalyticsDisclosure>.paceSpotlight,.raceAnalyticsDisclosure>.oracleCard,.raceAnalyticsDisclosure>.rcCard{margin:10px!important;max-width:calc(100% - 20px)}
+ .advancedLapMetric{margin:10px 10px 0;padding:13px;flex-wrap:wrap}
+ .strategyConfigDisclosure .strategyTwoCols{padding:10px}
+ .qualificationOptions .qualSetup{margin:10px}
+ .simConsole{padding:12px!important}
+ .simLeaveBtn{min-height:43px}
+}
+@media(max-width:380px){
+ .workspace--race .heroMetrics{grid-template-columns:1fr!important}
+ .workspace--race .heroMetrics>.metric:nth-child(3){grid-column:auto}
+ .workspace--race .heroMetrics>.metric{min-height:94px!important}
+ .activeRaceName strong{max-width:23ch}
+ .activeRaceName small{max-width:23ch}
+ .activeRaceStage{display:none}
+ .raceAnalyticsDisclosure>summary small{display:none}
+}
+@media(prefers-reduced-motion:reduce){.raceAnalyticsDisclosure *,.strategyConfigDisclosure *,.simAdvanced *{animation:none!important;transition:none!important}}
+
+/* Large touch targets and readable bottom row on 320px devices. */
+@media(max-width:590px){
+ .pageNav{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));width:100%;gap:3px!important;padding:4px!important;box-sizing:border-box}
+ .pageNav button{flex-direction:column!important;gap:4px!important;min-height:53px;padding:8px 2px!important;font-size:clamp(9px,2.55vw,11px)!important;letter-spacing:-.02em;line-height:1.05;white-space:normal!important;text-align:center;overflow-wrap:anywhere;box-sizing:border-box}
+ .pageNav button svg{width:17px!important;height:17px!important}
+ .topbar{gap:10px}
+ .topright .simExitTop{min-height:40px}
+ .topright .simExitTop span{font-size:11px}
+}

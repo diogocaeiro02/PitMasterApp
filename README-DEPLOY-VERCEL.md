@@ -1,4 +1,4 @@
-# PITMASTER V0.17 – preparação Palmela e publicação
+# PITMASTER V0.18 – GitHub, Vercel e workflow simplificado
 
 ## Prova de 29/11/2026 – formato 10+30
 1. Em **Provas**, usar **Formato 10 + 30**. Isto configura a pista KIP Palmela, data, qualificação prevista de 10 min e corrida de 30 min.
@@ -17,7 +17,7 @@ npm test
 npm run build
 git init
 git add .
-git commit -m "Pitmaster V0.17 – Palmela 10+30"
+git commit -m "Pitmaster V0.18 – Race workflow"
 git branch -M main
 git remote add origin https://github.com/SEU_UTILIZADOR/SEU_REPOSITORIO.git
 git push -u origin main
