@@ -860,7 +860,7 @@ function App() {
         {pace && paceReadout ? <>
           <div className="paceMainReadout"><small>{paceReadout.label}</small><strong>{paceReadout.headline}</strong><span>{paceReadout.detail}</span></div>
           <div className="paceQuickCompare"><div><span>NÓS</span><strong>{(pace.ownMedianMs/1000).toFixed(3)}s</strong></div><span className="paceVs">VS</span><div><span>PELOTÃO</span><strong>{(pace.fieldMedianMs/1000).toFixed(3)}s</strong></div><small>{paceReadout.comparison}</small></div>
-        </> : <div className="paceWaiting"><strong>SEM VOLTAS PARA COMPARAR</strong><span>{mode==='demo'?'O arquivo de Palmela só inclui o estado final. Não tem o histórico completo das voltas.':mode==='empty'?'Liga uma cronometragem ou inicia uma simulação.':'São necessárias pelo menos duas voltas válidas nossas e dos adversários.'}</span>{mode!=='sim'&&<button className="paceTrySim" onClick={useSimulation}><Play size={15}/> Experimentar com corrida simulada</button>}</div>}
+        </> : <div className="paceWaiting"><strong>SEM VOLTAS PARA COMPARAR</strong><span>{mode==='demo'?'O arquivo de Palmela só inclui o estado final. Não tem o histórico completo das voltas.':'São necessárias pelo menos duas voltas válidas nossas e dos adversários.'}</span>{mode!=='sim'&&<button className="paceTrySim" onClick={useSimulation}><Play size={15}/> Experimentar com corrida simulada</button>}</div>}
         <button type="button" className="paceDetailsLink" onClick={()=>setPaceOpen(true)}>COMO FUNCIONA <ArrowRight size={15}/></button>
       </section>
 
