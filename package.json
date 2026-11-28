@@ -1,0 +1,43 @@
+{
+  "name": "pitmaster",
+  "version": "0.17.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "test:strategy": "node --experimental-strip-types test-strategy.mjs",
+    "test:pace": "node --experimental-strip-types test-pace.mjs && node --experimental-strip-types test-pace-presentation.mjs",
+    "test:incidents": "node --experimental-strip-types test-incident-signals.mjs",
+    "test:rivals": "node --experimental-strip-types test-rival-pace.mjs",
+    "test:pit": "node --experimental-strip-types test-pit.mjs",
+    "test": "npm run test:strategy && npm run test:pace && npm run test:rivals && npm run test:incidents && npm run test:pit && npm run test:oracle && npm run test:simulator && npm run test:charts && npm run test:stint-hud && npm run test:projection && npm run test:races && npm run test:racefacer && npm run test:pit-auto && npm run test:stint-alerts && npm run test:celebration && npm run test:phases && npm run test:live-strategy && npm run test:pit-time && npm run test:sprint-preset",
+    "test:oracle": "node --experimental-strip-types test-oracle.mjs",
+    "test:simulator": "node --experimental-strip-types test-simulator.mjs",
+    "test:charts": "node --experimental-strip-types test-chart-data.mjs",
+    "test:stint-hud": "node --experimental-strip-types test-stint-hud.mjs",
+    "test:projection": "node --experimental-strip-types test-projection.mjs",
+    "test:races": "node --experimental-strip-types test-races.mjs",
+    "test:racefacer": "node --experimental-strip-types test-racefacer.mjs",
+    "test:pit-auto": "node --experimental-strip-types test-pit-automation.mjs",
+    "test:stint-alerts": "node --experimental-strip-types test-stint-alerts.mjs",
+    "test:celebration": "node --experimental-strip-types test-celebration.mjs",
+    "test:phases": "node --experimental-strip-types test-race-phases.mjs",
+    "test:live-strategy": "node --experimental-strip-types test-live-strategy.mjs",
+    "test:pit-time": "node --experimental-strip-types test-pit-time.mjs",
+    "test:sprint-preset": "node --experimental-strip-types test-sprint-preset.mjs"
+  },
+  "dependencies": {
+    "lucide-react": "^0.468.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "~5.7.3",
+    "vite": "^6.0.5"
+  }
+}

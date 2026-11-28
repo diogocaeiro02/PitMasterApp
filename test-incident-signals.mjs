@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict'
+import { reconcileRaceNotices } from './src/incidentSignals.ts'
+const notice=(id,type,kart)=>({id,type,kart,time:'12:10',message:`Evento ${id}`})
+let result=reconcileRaceNotices(null,[notice('old','penalty','7')],'7',['11'])
+assert.equal(result.alert,null,'Não dispara para mensagens iniciais históricas')
+result=reconcileRaceNotices(result.seen,[notice('old','penalty','7'),notice('w','warning','7')],'7',['11'])
+assert.equal(result.alert?.id,'w')
+result=reconcileRaceNotices(result.seen,[notice('w','warning','7')],'7',['11'])
+assert.equal(result.alert,null,'Warning idêntico não deve repetir alarme')
+result=reconcileRaceNotices(result.seen,[notice('x','penalty','99')],'7',['11'])
+assert.equal(result.alert,null,'Ocorrência de outro kart não interrompe a corrida')
+result=reconcileRaceNotices(result.seen,[notice('a','warning','11'),notice('b','penalty','11')],'7',['11'])
+assert.equal(result.alert?.id,'b','Penalização tem precedência')
+result=reconcileRaceNotices(result.seen,[notice('c','correction','7')],'7',['11'])
+assert.equal(result.alert,null,'Correção não é tratada como penalização')
+console.log('Alertas: histórico, deduplicação, rivais e prioridade OK')

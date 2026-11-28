@@ -1,0 +1,384 @@
+/* PITMASTER 0.15 — RACE SIGNALS / VISUAL SYSTEM
+ * One purpose, one visual language. Slate foundation, five semantic accents.
+ * The primary action stays green; telemetry/cyan, tactics/violet, pit/amber,
+ * risk/red. Color is never the only indicator: labels, icons and position remain.
+ */
+:root {
+  --base:#080e15;
+  --panel:#121d2a;
+  --soft:#172435;
+  --line:#2d3e50;
+  --sub:#a7b9ca;
+  --accent:#b9f77a;
+  --green:#67e7a5;
+  --danger:#ff8589;
+  --pm-green:#b9f77a;
+  --pm-live:#6adcf1;
+  --pm-virtual:#bda5ff;
+  --pm-warning:#ffc774;
+  --pm-critical:#ff8589;
+  --pm-ink:#f6faff;
+  --pm-radius:17px;
+  --pm-space:clamp(12px,1.5vw,20px);
+}
+body{background:#080e15;color:#f2f7ff}
+.ambient{background:radial-gradient(ellipse 800px 450px at 95% -12%,rgba(76,131,179,.11),transparent 74%),radial-gradient(ellipse 900px 500px at -20% 42%,rgba(86,71,150,.07),transparent 75%),linear-gradient(180deg,#0d1520,#090e16 65%)}
+.ambient:after{background-image:linear-gradient(90deg,rgba(150,182,229,.019) 1px,transparent 1px),linear-gradient(0deg,rgba(150,182,229,.019) 1px,transparent 1px)}
+.topbar{background:rgba(10,17,27,.92);border-bottom-color:#283b4d}
+.pageNav{background:#131f2b;border-color:#304253;box-shadow:0 5px 20px rgba(0,0,0,.12)}
+.pageNav button{color:#b3c3d5}
+.pageNav button.selected{background:#2a4932;color:#c9ff95;box-shadow:inset 0 0 0 1px #739c5b}
+.pageNav button:hover:not(.selected){background:#263445;color:#fff}
+.navBtn,.iconBtn{border-color:#394b58;background:#192536;color:#dce8f4}
+.navBtn:hover,.iconBtn:hover{background:#29384c;color:white}
+.connectionBadge.isConnected{border-color:#357a8b;background:#142c3d;color:#93f1ff}
+.connectionBadge.isDemo{border-color:#65533b;background:#2c241c;color:#f0d0a1}
+.overline{color:#8bcdb3;letter-spacing:.09em}
+.workspace{color:#eef6ff}
+.workspace :is(.raceIdentity p,.raceHubIntro p,.strategyHeading p,.rankingTop p){color:#b0bfd0}
+.workspace :is(.card,.metric,.intelTile,.strategyScore,.raceHubListItem){box-shadow:0 8px 26px rgba(0,0,0,.075)}
+.card{background:linear-gradient(156deg,#162331 0%,#111c2a 100%);border-color:#314557}
+.cardHeading{margin-bottom:19px}
+.cardHeading h2{color:#f7faff;line-height:1.2}
+.cardHeading p{color:#b3c3d5;font-size:12px;line-height:1.5}
+.cardHeading h2 svg{color:#8cd5ee}
+.sectionTag{border-color:#455b6c;color:#b9d2e1;background:#213345}
+.solidBtn{background:#b9f77a;color:#142412}
+.quietBtn{background:#223246;border-color:#42566b;color:#f0f7fc}
+.quietBtn:hover{background:#304359}
+.formInput,.raceHubFields .formInput{background:#111e2d;color:#eff9ff;border:1px solid #4a5f72}
+.inputLabel{color:#afcadc}
+.modal{background:#152131;border-color:#485d6b}
+.hint{color:#b6c6d6}
+
+/* Race header: green belongs to our team, not every number. */
+.raceHeader{gap:var(--pm-space)}
+.raceIdentity h1{color:#f9fbff}
+.teamSelect{background:#172c27;border:1px solid #5b845f}
+.teamSelect .hash{color:#b9f77a}
+.teamSelect select{color:#fff}
+
+/* Four hero metrics are four DIFFERENT instruments. */
+.heroMetrics{gap:var(--pm-space)}
+.heroMetrics>.metric{position:relative;min-height:156px;isolation:isolate;border-radius:16px;border:1px solid;overflow:hidden}
+.heroMetrics>.metric:before{content:'';position:absolute;top:0;left:0;width:100%;height:3px;background:var(--instrument,#b9f77a);opacity:.92}
+.heroMetrics>.metric:after{display:none}
+.heroMetrics>.metric:nth-child(1){--instrument:#a4f17a;background:linear-gradient(142deg,#1c382e 0%,#122b25 100%);border-color:#466b5c}
+.heroMetrics>.metric:nth-child(2){--instrument:#69ddf3;background:linear-gradient(142deg,#173348 0%,#122336 100%);border-color:#376276}
+.heroMetrics>.metric:nth-child(3){--instrument:#c7a7ff;background:linear-gradient(142deg,#312840 0%,#201d34 100%)!important;border-color:#695481!important}
+.heroMetrics>.metric:nth-child(4){--instrument:#ffca7b;background:linear-gradient(142deg,#362c2a 0%,#292322 100%);border-color:#755447}
+.heroMetrics>.metric .metricLabel{color:#cad7df;font-size:10px;letter-spacing:.08em}
+.heroMetrics>.metric:nth-child(2) .metricValue{color:#a2efff}
+.heroMetrics>.metric:nth-child(3) .metricValue,.heroMetrics .projectedHeroValue{color:#dac7ff!important}
+.heroMetrics>.metric:nth-child(4) .metricValue{color:#ffe4bc}
+.heroMetrics .metricSub{color:#bfccd4}
+.heroMetrics>.metric:nth-child(1) .positionValue{color:#f7fff7}
+.heroMetrics>.metric:nth-child(1) .positionValue>span{color:#b9f77a}
+.heroMetrics>.metric .metricRankingLink{color:#d9c5ff}
+
+/* Core race areas: physical track is CYAN; final prediction VIOLET;
+   the pilot timer is an operational NAVY surface. */
+.dashboardGrid{gap:var(--pm-space)}
+.dashboardGrid .trackCard{background:linear-gradient(155deg,#122b3b,#111f2e 80%);border-color:#3b6177}
+.trackCard:before{height:3px;background:linear-gradient(90deg,#63ddf2,transparent);left:0;width:70%}
+.trackCard .cardHeading h2 svg,.trackCard .neighborTitle svg{color:#77d9f1}
+.trackCard .neighbor{background:#1a3141;border-color:#36596d}
+.trackCard .neighborGap{color:#a0ebff}
+.trackCard .neighborTitle{color:#afd6df}
+.trackCard .neighborTitle svg{color:#8cd5e3}
+.trackCard .mineNeighbor{background:linear-gradient(125deg,#25513a,#1b3b37);border:1px solid #6fae80}
+.trackCard .mineNeighbor .neighborTitle{color:#d1ffdb}
+.trackCard .carIndicator{background:#254d46;border-color:#6fd3ce;color:#aafaff}
+.trackCard .signalNote{color:#bbd5e3;border-color:#35546b}
+.dashboardGrid .virtualRivalsCard{background:linear-gradient(156deg,#29233a,#1c1d30);border-color:#5c4c79}
+.virtualRivalsCard .cardHeading h2 svg{color:#c7a7ff}
+.virtualRivalRow{background:#2a283e;border-color:#4e476c}
+.virtualRivalRow.own{background:#244032;border-color:#698b6a}
+.virtualRivalIdentity>span{color:#f5f1ff}
+.virtualRivalIdentity>small{color:#c6bbda}
+.virtualRivalInfo>strong{color:#e4d6ff}
+.virtualRivalsFoot{border-color:#4e4664;color:#c8bddc}
+.virtualNoData{background:#282438;border-color:#62527d}
+.virtualNoData svg{color:#c3a5ff}
+.dashboardGrid .stintCard{background:linear-gradient(150deg,#17273a,#13202f);border-color:#405a72}
+.dashboardGrid .stintCard .cardHeading svg{color:#80d7ed}
+.dashboardGrid .contextCard{background:linear-gradient(150deg,#1a2635,#151e2a);border-color:#405268}
+
+/* Tertiary information: distinct hues, restrained strength. */
+.intelligenceGrid .intelTile{border-color:#42546a;background:linear-gradient(142deg,#17293d,#111e2d)}
+.intelligenceGrid .intelTile:nth-child(3n+2){border-color:#554973;background:linear-gradient(145deg,#29243b,#1b1d32)}
+.intelligenceGrid .intelTile:nth-child(3n){border-color:#675447;background:linear-gradient(145deg,#31281e,#241f21)}
+.intelligenceGrid .pitTile{border-color:#568798;background:linear-gradient(140deg,#153c47,#152632)}
+.intelligenceGrid .pitTile.pitActive{border-color:#73e5ec;box-shadow:inset 0 3px #72dff0}
+.intelligenceGrid .intelTile .intelEyebrow{color:#c4d5e2}
+.intelligenceGrid .intelTile>strong{color:#f7fbff}
+.intelligenceGrid .intelTile>small{color:#bac8d5}
+.intelligenceGrid .pitTile>strong{color:#a7f2ff}
+.intelligenceGrid .pitTile .pitAction{color:#eafff9}
+.intelligenceGrid .intelTile:focus-visible{outline:2px solid #b9f77a;outline-offset:3px}
+.raceRows .raceRow{border-color:#2c4256}
+.raceRow.mineRow{background:linear-gradient(90deg,#24533a,#21364a);box-shadow:inset 4px 0 #b9f77a}
+
+/* Strategy is tactically purple; pit durations readable in cyan. */
+.strategyScreen{color:#f2f7ff}
+.strategyScreen .strategyScore:nth-child(1){background:linear-gradient(145deg,#193b38,#122b33);border-color:#3e7578}
+.strategyScreen .strategyScore:nth-child(2){background:linear-gradient(145deg,#24324a,#17263e);border-color:#485a7c}
+.strategyScreen .strategyScore:nth-child(3){background:linear-gradient(145deg,#362d3f,#25243b);border-color:#62547a}
+.strategyScreen .strategyScore:nth-child(4){background:linear-gradient(145deg,#203a2b,#142e23);border-color:#4c6e52}
+.strategyScore small{color:#bdcbd6}
+.strategyScore>span{color:#b9c9d4}
+.strategyScreen .strategyConfig{background:linear-gradient(145deg,#182c3d,#121e2c);border-color:#3c576b}
+.strategyScreen .strategyPlanner{background:linear-gradient(150deg,#22243a,#151e30);border-color:#514d72}
+.strategyScreen .strategyPlanner .cardHeading h2 svg{color:#c9b5ff}
+.strategyScreen .pitHistoryPanel{background:linear-gradient(150deg,#14313c,#11242f);border-color:#377389}
+.strategyScreen .pitHistoryPanel .cardHeading h2 svg{color:#6de0f1}
+.strategyScreen .pitHistoryItem{background:#183543;border-color:#3b7083}
+.strategyScreen .pitHistoryItem b{font:750 clamp(21px,2vw,27px) 'Space Grotesk',sans-serif;color:#9aeaf8;letter-spacing:-.035em}
+.pitHistoryState{color:#b7cbd4;font-size:10px;letter-spacing:.05em;font-weight:700}
+.strategyScreen .ruleField{background:#182939;border-color:#395366}
+.ruleLabel{color:#eef7ff}
+.ruleField>small{color:#b2c4d0}
+.ruleInputWrap{background:#111d2b;border-color:#4d6273;overflow:visible}
+.ruleInputWrap input{color:#f7fbff}
+.ruleInputWrap>span{color:#a1bed1}
+.ruleInputWrap>.pitTimeInputWrap{flex:1;min-width:0;padding:0}
+.ruleInputWrap .pitTimeInput{font:750 clamp(16px,1.9vw,21px) 'Space Grotesk',sans-serif;padding:9px 9px;color:#99efff}
+.ruleInputWrap>span:last-child{padding:0 8px;font-size:9px;white-space:normal;text-align:right}
+.ruleInputWrap input::placeholder{color:#7e9cab}
+.pitTimeInputWrap{display:inline-flex;flex-direction:column;position:relative;flex:0 1 auto;min-width:0;max-width:100%;vertical-align:middle}
+.pitTimeInput{max-width:100%;min-width:0;color:#8eeaff!important;font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.pitTimeInput[aria-invalid="true"]{border-color:#ff8589!important;outline:1px solid #ff8589}
+.pitTimeError{display:block;color:#ffadb0;font-size:10px;line-height:1.4;font-weight:700;padding:4px 3px 0;max-width:220px}
+.pitPlanInput{display:flex;gap:7px;flex-wrap:wrap;align-items:center;color:#b6dcef}
+.pitPlanInput .pitTimeInputWrap{flex:0 1 126px}
+.pitPlanInput .pitTimeInput{width:126px;min-height:39px;padding:7px 9px;background:#132b3d;border:1px solid #4b8094;border-radius:9px;font-size:14px;box-shadow:none}
+.pitPlanInput .pitTimeInput:disabled{color:#b5c5d3!important;background:#213041}
+.planRow{background:#182437;border-color:#354761}
+.planRow:nth-child(even){background:#19283d}
+.planRunning{background:#213e36;border-color:#75b27e}
+.planLocked{background:#202c38!important;border-color:#495768!important}
+.planSummary{background:#21283e;border-color:#514d71;color:#cad3e3}
+.planSummary span:first-child{color:#f3f0ff}
+.strategyTimelineSegment{background:#53457c;border-color:#786aa3;color:#fff}
+.strategyTimelineSegment:nth-child(3n+2){background:#246376;border-color:#438598}
+.strategyTimelineSegment:nth-child(3n){background:#396a4a;border-color:#5d9470}
+.strategySandbox{background:linear-gradient(110deg,#18382e,#172938);border-color:#468579}
+.strategySandbox.isDraft{background:linear-gradient(110deg,#39284c,#232539);border-color:#977ed1}
+.liveBudgetPanel{background:#292440;border-color:#695c97}
+.strategyHint{background:#202e3e;border-color:#3d5368;color:#c1d2e3}
+.strategyDriverRow{background:#1c2c3a;border-color:#415366}
+.strategyBottomBar{border-color:#4b5b70}
+
+/* Race hub: make preparation different from live operations. */
+.raceHubLibrary{background:linear-gradient(160deg,#18293b,#141f2d);border-color:#405b73}
+.raceHubSelected{background:linear-gradient(140deg,#203d34,#122c2c);border-color:#4f8974}
+.raceHubSearch{background:#152639;border-color:#476076}
+.raceHubSearch input{color:#f8fbff}
+.raceHubListItem{background:#1a2d40;border-color:#3a5670}
+.raceHubListItem:hover{background:#243d50;border-color:#7bb3cc}
+.raceHubListItem.isSelected{background:linear-gradient(125deg,#234d42,#203a4b);border-color:#94dca3}
+.raceHubMiniMetrics>div:nth-child(1){background:#1a493f;border-color:#467e71}
+.raceHubMiniMetrics>div:nth-child(2){background:#193b54;border-color:#427d98}
+.raceHubMiniMetrics>div:nth-child(3){background:#322c48;border-color:#62578a}
+.raceHubCheck{background:#1d303f;border-color:#365269}
+.raceHubCheck.done{background:#1e4338;border-color:#467e68}
+.raceHubTabs,.standingsModes{background:#172638;border-color:#3b5066}
+.raceHubTabs button.selected,.standingsModes button.selected{background:#36506a;color:#e7f6ff}
+.raceHubAdvanced{background:#141f2c}
+.raceHubStatus.status-live{background:#1a3e4a;border-color:#3e91a0;color:#9fecff}
+
+/* Qualifying has its own cyan identity; virtual ranking remains purple. */
+.qualificationPage .qualHero{background:linear-gradient(145deg,#133c4d,#14283a);border-color:#3c7f94}
+.qualificationPage .qualStandings{background:linear-gradient(145deg,#182b3c,#131e2c);border-color:#405f74}
+.qualHeroTop>div{background:#164154;border-color:#3d8196}
+.qualMetrics>div{background:#1b3345;border-color:#3c657a}
+.qualRow{background:#192b3d;border-color:#38596d}
+.qualRowMine{background:#21473f;border-color:#84bf95}
+.qualSectorStrip>div{background:#163d49;border-color:#42778b}
+.rankingSummary>div{background:linear-gradient(130deg,#192d42,#162435);border-color:#3e5b76}
+.rankingSummary>div:nth-child(3){background:linear-gradient(130deg,#312843,#211e35);border-color:#5d5077}
+.rankingSummary>div:nth-child(4){background:linear-gradient(130deg,#342a29,#282125);border-color:#705249}
+.rankingTableScroll{background:#111e2d;border-color:#40566b}
+.rankingTable th{background:#253951;color:#d4e7f3}
+.rankingTable td{border-color:#283e55;color:#e2ebf4}
+.rankingTable tbody tr:hover{background:#26384b}
+.rankingTable .rankingMine{background:#214937}
+.rankingSearch,.rankingFilter{background:#182c3e;border-color:#496179;color:#e9f6ff}
+
+/* Stint HUD: independent visual anchor, readable while moving. */
+.stintHud{background:linear-gradient(118deg,#10251e 0%,#142b33 68%,#10232b 100%);border-color:#5a8a82;box-shadow:0 14px 65px rgba(0,0,0,.66)}
+.stintHudMetric{border-left-color:#46757a}
+.stintHudMetric>span{color:#b3d4dc}
+.stintHudDeadline .stintHudDigits{color:#b9f77a}
+.stintHud--pit{border-color:#59d4ed}
+.stintHud--pit .stintHudDeadline .stintHudDigits{color:#9aefff}
+.stintWarningRibbon{background:#412b1b;border-color:#e2a65a;color:#ffd695}
+.stintWarningRibbon.alert-one,.stintWarningRibbon.alert-limit{background:#4b2129;border-color:#e36775}
+.pitConfirmNudge{background:#24443e;border-color:#90dfc9;color:#d6fff3}
+
+/* Focus and layout: consistent tap targets without nested horizontal overflow. */
+.workspace :is(.card,.intelTile,.metric,.strategyScore,.raceHubSelected,.raceHubLibrary){min-width:0}
+:where(.workspace) :is(input,select,textarea){max-width:100%}
+.workspace :is(.card,.intelTile,.metric,.strategyScore){overflow-wrap:anywhere}
+.workspace :is(.heroMetrics,.dashboardGrid,.intelligenceGrid,.strategyTwoCols,.strategyScoreGrid,.raceHubGrid,.raceHubMiniMetrics){gap:var(--pm-space)}
+:where(.workspace) button:focus-visible{outline:2px solid #a3f7ff;outline-offset:2px}
+:where(.workspace) .solidBtn:focus-visible{outline-color:#b9f77a}
+@media(max-width:920px){
+  .strategyScreen .strategyScoreGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .strategyScreen .strategyTwoCols{grid-template-columns:minmax(0,1fr)}
+  .strategyScreen .rulesGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:620px){
+  .heroMetrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .heroMetrics>.metric{min-height:129px;padding:15px 13px;border-radius:12px}
+  .heroMetrics>.metric .metricLabel{font-size:9px;letter-spacing:.04em}
+  .heroMetrics>.metric .metricValue{font-size:clamp(22px,5.7vw,31px);white-space:normal}
+  .heroMetrics>.metric .positionValue{font-size:40px}
+  .heroMetrics>.metric .metricSub{font-size:10px;line-height:1.35;white-space:normal}
+  .card{padding:15px}
+  .cardHeading{gap:9px;margin-bottom:15px}
+  .cardHeading h2{font-size:19px}
+  .dashboardGrid .trackCard,.dashboardGrid .virtualRivalsCard{padding:16px}
+  .trackCard .neighbor{padding:13px;min-height:0}
+  .trackCard .neighborMain{gap:7px}
+  .trackCard .neighborTeam strong{font-size:19px}
+  .trackCard .neighborGap{font-size:23px}
+  .strategyScreen .strategyScoreGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .strategyScore{min-height:110px;padding:14px}
+  .strategyScore strong{font-size:24px}
+  .strategyScreen .rulesGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .ruleField{padding:10px}
+  .ruleInputWrap>span:last-child{font-size:8px;padding:0 4px}
+  .ruleInputWrap .pitTimeInput{font-size:clamp(13px,3.2vw,17px);padding:9px 4px}
+  .ruleInputWrap input{font-size:17px}
+  .pitPlanInput .pitTimeInputWrap{flex:0 1 120px}
+  .pitPlanInput .pitTimeInput{width:120px}
+  .pitHistoryList{grid-template-columns:1fr}
+  .pitHistoryItem b{font-size:25px!important}
+  .stintHudMetric{border-left:0;border-top-color:#46757a}
+  .raceHubMiniMetrics{gap:8px}
+  .raceHubMiniMetrics>div{padding:11px}
+}
+@media(max-width:360px){
+  .strategyScreen .rulesGrid{grid-template-columns:1fr}
+  .heroMetrics>.metric{padding:12px 10px}
+  .heroMetrics>.metric .metricLabel{font-size:8px}
+  .heroMetrics>.metric .metricValue{font-size:21px}
+  .heroMetrics>.metric .positionValue{font-size:34px}
+}
+@media(prefers-reduced-motion:reduce){
+  .card,.metric,.intelTile,.stintHud{transition:none!important}
+}
+
+/* V0.15.1 — Live counters must never resize the dashboard when seconds change.
+   Keep numeric glyphs in fixed slots and reserve space for changing messages. */
+:where(.workspace,.stintHud) :is(.neighborGap,.stintHudDigits,.turnClock strong,.metricValue,.lapHeroValue,.lapTimeLine strong,.pitHistoryItem b,.pitGraphRow>strong,.pitTimeInput,.simClock,.commandHint,.mineTime,.topGapLine strong,.paceQuickCompare strong,.paceMainReadout strong){
+  font-variant-numeric:tabular-nums lining-nums;
+  font-feature-settings:'tnum' 1,'lnum' 1;
+}
+.trackCard,.trackNeighbors,.neighbor,.neighborMain,.neighborPace{min-width:0}
+.neighborMain{min-height:54px;flex-wrap:nowrap!important;align-items:center}
+.neighborTeam{min-width:0;flex:1 1 0}
+.neighborGap{display:block;flex:0 0 9ch;width:9ch;min-width:9ch;text-align:right;line-height:1.1;letter-spacing:-.035em}
+.neighborGap small{line-height:1.35;min-height:12px}
+.neighborPace{display:grid;grid-template-columns:16px minmax(0,1fr);align-items:center;column-gap:8px;row-gap:3px;min-height:52px;align-content:center}
+.neighborPace svg{grid-column:1;grid-row:1}
+.neighborPace strong{grid-column:2;grid-row:1;min-width:0}
+.neighborPace span{grid-column:2;grid-row:2;min-width:0;max-width:100%;width:auto;margin-left:0;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+.mineNeighbor{min-height:102px}
+.mineNumber{min-width:3.3ch;text-align:center;flex-shrink:0}
+.mineTime{flex:0 0 auto;white-space:nowrap;font-variant-numeric:tabular-nums}
+.stintHudDigits{display:block;min-width:8ch;white-space:nowrap;line-height:1.18}
+.turnClock strong{min-width:8ch;line-height:1.18}
+.commandHint{display:block;min-height:1.5em}
+.pitHistoryItem b,.pitGraphRow>strong{white-space:nowrap}
+@media(max-width:620px){
+  .neighborMain{min-height:56px;gap:7px!important}
+  .neighborTeam{flex:1 1 0;min-width:0}
+  .neighborTeam span{max-width:100%}
+  .neighborGap{flex:0 0 8ch;width:8ch;min-width:8ch;font-size:clamp(17px,4.8vw,23px)}
+  .neighborPace{min-height:56px}
+  .neighborPace span{width:auto;margin-left:0}
+  .stintHudDigits{min-width:0}
+}
+
+/* V0.16 — Guided race preparation: visually distinct, touch-friendly, fixed geometry. */
+.raceWizardPage .raceHubGrid{align-items:start}
+.raceWizardPage .raceHubMain{min-width:0;display:grid;gap:16px}
+.wizardHeadline{display:flex;gap:18px;align-items:center;justify-content:space-between;background:linear-gradient(115deg,#163629,#132439 70%);border-color:#466d68;padding:19px 22px}
+.wizardHeadlineText{min-width:0}
+.wizardHeadlineText h2{font-size:clamp(18px,2.4vw,24px);line-height:1.25;margin:9px 0 5px;overflow-wrap:anywhere}
+.wizardHeadlineText p{color:#aac3cf;font-size:12px;line-height:1.5}
+.wizardProgressSummary{flex:none;display:flex;flex-direction:column;align-items:center;min-width:100px;padding:12px;border-radius:12px;background:#1d4539;border:1px solid #467a60}
+.wizardProgressSummary strong{font-size:24px;line-height:1.1;color:#c4ffa1;font-variant-numeric:tabular-nums}
+.wizardProgressSummary span{font-size:10px;color:#b4d8c3;margin-top:4px;text-align:center}
+.wizardShell{padding:0;overflow:hidden;border-color:#46516d;background:#131f31}
+.wizardHeader{display:flex;flex-wrap:wrap;gap:15px;justify-content:space-between;align-items:center;padding:22px 24px 18px}
+.wizardHeader h2{font-size:clamp(19px,2.2vw,26px);margin:7px 0 5px;color:#f9fbff}
+.wizardHeader p{max-width:540px;font-size:12px;color:#aabdd3;line-height:1.55}
+.wizardSaved{display:flex;align-items:center;gap:6px;color:#afefba;background:#1c3529;border:1px solid #426b51;padding:7px 10px;border-radius:10px;font-size:10px;font-weight:700;white-space:nowrap}
+.wizardSteps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;padding:0 24px 20px;border-bottom:1px solid #33465b}
+.wizardStep{display:flex;align-items:center;justify-content:center;gap:7px;min-width:0;padding:12px 5px;border-radius:10px;border:1px solid #304558;background:#17283b;color:#afc2d4;cursor:pointer;font:inherit;font-size:11px;font-weight:750;transition:background .16s,border-color .16s}
+.wizardStep:hover{background:#213951}
+.wizardStep.active{background:#2c4335;color:#dbffc0;border-color:#89c66d;box-shadow:inset 0 -3px #b9f77a}
+.wizardStepNumber{display:grid;place-items:center;width:22px;height:22px;flex:none;border-radius:100%;background:#2d4357;font-size:11px;font-variant-numeric:tabular-nums}
+.wizardStep.active .wizardStepNumber{background:#b9f77a;color:#192d16}
+.wizardStep.visited:not(.active) .wizardStepNumber{background:#375a44;color:#c5efbe}
+.wizardStepLabel{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wizardContent{padding:22px 24px 28px;min-height:330px;animation:pmWizardEnter .18s ease}
+@keyframes pmWizardEnter{from{opacity:.5;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.wizardSectionIntro{margin-bottom:21px}.wizardStepCaption{color:#a79be6;font-size:10px;font-weight:800;letter-spacing:1.1px}.wizardSectionIntro h3{font-size:21px;margin:6px 0 3px;color:white}.wizardSectionIntro p{color:#a5b7c9;font-size:12px}
+.wizardFields,.wizardRules,.wizardTeam,.wizardTiming,.wizardReview{display:grid;gap:18px;max-width:770px}
+.wizardTwo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.wizardField{display:flex;flex-direction:column;gap:7px;min-width:0}
+.wizardFieldTitle{font-size:12px;font-weight:750;color:#edf5ff;display:flex;gap:6px;align-items:center}
+.wizardFieldTitle b{color:#ffc774}
+.wizardFieldHelp{font-size:11px;color:#9eb5c8;line-height:1.45;min-height:14px}
+.wizardField .formInput,.wizardInputGroup input,.wizardAddDriver .formInput{width:100%;max-width:none;box-sizing:border-box;min-height:46px;background:#0f1b2a;border:1px solid #496179;border-radius:10px;padding:10px 12px;color:#f2f8ff;font-size:15px}
+.wizardField .formInput:focus,.wizardInputGroup input:focus,.wizardAddDriver input:focus{outline:2px solid #a2de76;outline-offset:1px}
+.wizardInputGroup{display:flex;min-width:0;align-items:center;border:1px solid #45617a;border-radius:10px;background:#0f1b2a;overflow:hidden}
+.wizardInputGroup input{border:none;border-radius:0;flex:1;min-width:0}
+.wizardInputGroup input:focus{outline:none}
+.wizardInputGroup:focus-within{outline:2px solid #a2de76;outline-offset:1px}
+.wizardInputGroup em{flex:none;min-width:48px;max-width:90px;text-align:center;padding:0 11px;font-style:normal;font-weight:700;font-size:11px;color:#a9c3d7;border-left:1px solid #354c60}
+.wizardRuleGroup{padding:17px;border:1px solid #415671;background:#1a293d;border-radius:13px;display:grid;gap:15px;min-width:0}
+.wizardRuleGroup h4{color:#b9ddf2;font-size:12px;letter-spacing:.2px;display:flex;align-items:center;gap:8px}
+.wizardRuleGroup:nth-of-type(3){background:#182f39;border-color:#436f7d}.wizardRuleGroup:nth-of-type(3) h4{color:#8ae3f1}
+.wizardInfo{display:flex;align-items:flex-start;gap:12px;padding:13px;border:1px solid #5d5c80;border-radius:11px;background:#28263e;color:#cfc6ef;line-height:1.55;font-size:12px}
+.wizardInfo svg{flex:none;color:#c7b0ff;margin-top:1px}.wizardInfo strong{color:#f2eaff}
+.wizardErrors{display:grid;gap:5px;padding:12px;background:#45272b;border:1px solid #ad6367;border-radius:10px;color:#ffd6d4;font-size:12px}
+.wizardError{color:#ffaaa8;font-size:11px;line-height:1.5}
+.wizardAdvancedToggle{display:flex;align-items:center;gap:9px;background:#252c44;border:1px solid #5e577e;color:#e2d4ff;min-height:46px;padding:10px 14px;border-radius:11px;font-weight:750;cursor:pointer;text-align:left}
+.wizardAdvancedToggle span{margin-left:auto;font-size:10px;color:#b9acd8;font-weight:600}
+.wizardAdvanced{background:#27243b;border-color:#5b4d79}
+.wizardMuted{font-size:12px;color:#aabacd;line-height:1.6}
+.wizardAddDriver{display:flex;gap:10px}.wizardAddDriver .solidBtn{min-height:46px;white-space:nowrap}
+.wizardDriverList{display:grid;gap:8px}
+.wizardDriver{display:flex;gap:12px;align-items:center;min-height:49px;border-radius:10px;border:1px solid #46647a;background:#1a3142;padding:8px 10px}
+.wizardDriver.placeholder{border-style:dashed;opacity:.68}
+.wizardDriverIndex{display:grid;place-items:center;border-radius:8px;width:27px;height:27px;flex:none;background:#35556a;color:#cce9fc;font-size:12px;font-weight:800}
+.wizardDriver strong{flex:1;min-width:0;overflow-wrap:anywhere;font-size:13px;color:white}.wizardDriver small{color:#b1c0d2;font-size:10px}.wizardDriver button{display:grid;place-items:center;width:38px;height:38px;border:1px solid #4c6279;border-radius:9px;background:#25384b;color:#d9e9f6;cursor:pointer;flex:none}
+.wizardProviderGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.wizardProvider{display:flex;gap:8px;align-items:center;justify-content:center;min-height:65px;padding:12px 8px;color:#d8e4f2;background:#1c3044;border:1px solid #3e5971;border-radius:12px;cursor:pointer;font-size:12px}.wizardProvider strong{overflow-wrap:anywhere}.wizardProvider.selected{color:#b3f4ff;background:#1c3c4c;border-color:#62c6dc}.wizardProvider.selected svg:last-child{color:#75efff}
+.wizardConnectionStatus{display:flex;align-items:center;gap:9px;padding:12px;border-radius:10px;background:#213246;color:#cee3f6;font-size:12px}
+.wizardReviewSummary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.wizardReviewSummary>div{display:flex;flex-direction:column;gap:7px;padding:14px;border:1px solid #44566f;border-radius:12px;background:#1c2b3d;min-width:0}.wizardReviewSummary>div:nth-child(2){background:#29243f;border-color:#67517e}.wizardReviewSummary>div:nth-child(4){background:#153541;border-color:#396f81}.wizardReviewSummary span{font-size:10px;letter-spacing:.8px;color:#a4bdd2;font-weight:800}.wizardReviewSummary strong{font-size:14px;color:#fff;overflow-wrap:anywhere}.wizardReviewSummary small{font-size:11px;color:#b9cbdb;overflow-wrap:anywhere}
+.wizardChecklist{border:1px solid #42566a;border-radius:12px;overflow:hidden}.wizardChecklist h4{display:flex;gap:9px;align-items:center;padding:12px 14px;color:#f2f7ff;background:#25364a;font-size:13px}.wizardCheck{display:flex;gap:11px;align-items:center;width:100%;padding:12px 15px;color:#dde7f2;background:#172639;border:0;border-top:1px solid #334457;cursor:pointer;text-align:left;font-size:12px}.wizardCheck span{flex:1}.wizardCheck>svg:last-child{color:#94a9c2}.wizardCheck:hover{background:#20354a}
+.wizardReviewActions{display:flex;flex-wrap:wrap;gap:9px}.wizardReviewActions button{min-height:46px}
+.wizardFooter{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid #34475c;padding:14px 24px;background:#101c2b}.wizardFooter button{min-height:46px}.wizardFooter button:disabled{opacity:.35;cursor:not-allowed}.wizardFooter>span{font-size:11px;color:#9fb2c9}
+@media(max-width:920px){.wizardHeader,.wizardContent{padding-left:17px;padding-right:17px}.wizardSteps{padding-left:17px;padding-right:17px}.wizardFooter{padding-left:17px;padding-right:17px}}
+@media(max-width:620px){.raceWizardPage .raceHubMain{gap:12px}.wizardHeadline{padding:15px;gap:12px}.wizardProgressSummary{min-width:76px;padding:9px}.wizardProgressSummary strong{font-size:21px}.wizardHeader{padding:17px 14px;gap:10px}.wizardHeader p{font-size:11px}.wizardSaved{font-size:9px}.wizardSteps{gap:4px;padding:0 10px 14px}.wizardStep{flex-direction:column;gap:5px;padding:9px 2px;min-height:60px}.wizardStepNumber{width:21px;height:21px}.wizardStepLabel{font-size:9px;letter-spacing:-.2px;width:100%;text-align:center}.wizardContent{padding:17px 13px 22px;min-height:290px}.wizardTwo,.wizardReviewSummary{grid-template-columns:1fr}.wizardRuleGroup{padding:12px}.wizardReviewActions{display:grid;grid-template-columns:1fr}.wizardProviderGrid{grid-template-columns:1fr}.wizardProvider{min-height:48px;justify-content:flex-start}.wizardAddDriver{flex-wrap:wrap}.wizardAddDriver .formInput{flex:1 1 100%}.wizardAddDriver .solidBtn{width:100%;justify-content:center}.wizardFooter{padding:12px;gap:6px}.wizardFooter button{padding:10px;font-size:12px}.wizardFooter>span{font-size:10px}.wizardDriver small{display:none}}
+@media(max-width:360px){.wizardStepLabel{font-size:8px}.wizardFooter>span{display:none}}
+@media(prefers-reduced-motion:reduce){.wizardContent{animation:none}.wizardStep{transition:none}}
+
+/* V0.17 – compact race preparation and qualifying clarity */
+.sprintPresetCard {display:flex;align-items:center;justify-content:space-between;gap:18px;background:linear-gradient(115deg,#182637,#14231f)!important;border:1px solid #3c7263!important;padding:20px!important;}
+.sprintPresetCard h2 {margin:6px 0;font-size:clamp(1rem,1.8vw,1.35rem);color:#eaf9f4;}
+.sprintPresetCard p {margin:0;color:#b8cbd1;max-width:65ch;line-height:1.55;}
+.sprintPresetCard .solidBtn {flex-shrink:0;min-height:48px;}
+.qualPresetNote {font-size:.85rem;color:#97ecdf;margin:8px 0 0;}
+.qualDurationField {display:flex;flex-direction:column;gap:6px;max-width:280px;}
+.qualDurationField input {max-width:170px;}
+@media (max-width:760px){.sprintPresetCard{flex-direction:column;align-items:stretch;padding:16px!important}.sprintPresetCard .solidBtn{width:100%;justify-content:center}.qualDurationField{max-width:100%}}
+/* Dynamic values must not move other elements when their digits change. */
+.raceHeader, .raceControls, .qualHeroTop, .qualMetrics {min-width:0;}
+.qualCountdown,.qualMetrics strong,.qualHeroTop strong,.stintHUD strong,.timeValue,.gapValue{font-variant-numeric:tabular-nums;white-space:nowrap;}

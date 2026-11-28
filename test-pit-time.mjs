@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict'
+import {formatPitDurationMs,formatPitDurationSeconds,parsePitDurationSeconds} from './src/pitTime.ts'
+assert.equal(formatPitDurationMs(181104),'3:01:104')
+assert.equal(formatPitDurationMs(60000),'1:00:000')
+assert.equal(formatPitDurationMs(999),'0:00:999')
+assert.equal(formatPitDurationMs(3600501),'60:00:501')
+assert.equal(formatPitDurationMs(181103.6),'3:01:104')
+assert.equal(formatPitDurationMs(-500),'0:00:000')
+assert.equal(formatPitDurationSeconds(181.104),'3:01:104')
+assert.equal(formatPitDurationSeconds(null),'—:——:———')
+assert.equal(parsePitDurationSeconds('3:01:104'),181.104)
+assert.equal(parsePitDurationSeconds('3:01'),181)
+assert.equal(parsePitDurationSeconds('3:01.1'),181.1)
+assert.equal(parsePitDurationSeconds('181.104'),181.104)
+assert.equal(parsePitDurationSeconds(''),null)
+assert.ok(Number.isNaN(parsePitDurationSeconds('3:71:104')))
+assert.ok(Number.isNaN(parsePitDurationSeconds('3:01:10')))
+console.log('OK — tempos de pit precisos, conversão e validação')
