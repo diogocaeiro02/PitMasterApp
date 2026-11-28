@@ -139,7 +139,7 @@ export function StrategyPanel({ strategy, onChange, drivers, onAddDriver, onRemo
   return <div className="strategyScreen">
     <div className="strategyHeading">
       <div><div className="overline"><span className="limeDot"/> PITMASTER / RACE PLANNING</div><h1>Estratégia<span>.</span></h1><p>O que já aconteceu fica bloqueado. Planeia ou simula apenas os turnos que faltam.</p></div>
-      <div className="strategyHeaderActions"><button className="quietBtn" onClick={onResetRace}><RotateCcw size={16}/> Nova prova</button><button className="quietBtn" onClick={onBack}><ArrowLeft size={16}/> Voltar à corrida</button></div>
+      <div className="strategyHeaderActions"><button className="quietBtn" onClick={onResetRace}><RotateCcw size={16}/> Reiniciar dados</button><button className="quietBtn" onClick={onBack}><ArrowLeft size={16}/> Voltar à corrida</button></div>
     </div>
 
     <section className={`strategySandbox ${draft?'isDraft':''}`}>

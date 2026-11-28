@@ -1,3 +1,19 @@
+# Pitmaster V0.20 — Race Hub & Calendar
+
+**Versão mais recente:** V0.20. Entrada pela biblioteca de Provas e Calendário; ao abrir cada prova, aparecem Preparar, Qualificação, Corrida, Classificação e Estratégia. Lap Performance no topo do painel Corrida, cartões mais compactos, cores mais contrastantes e dados fictícios isolados do Live Timing real.
+
+**Lê também** `RELEASE-NOTES-V0.20.md` para a lista de alterações e passos de publicação. Os dados são locais por browser, sem sincronização. Apex/RaceFacer continuam integrações experimentais.
+
+---
+
+# Pitmaster V0.19 — Copilot Estratégico
+
+**Novo:** uma próxima ação clara na página Corrida, explicação do porquê, piloto seguinte sugerido, janelas de pit 0/1/2/4 voltas com validação regulamentar, ritmo/rivais quando os dados estão atualizados e aplicação segura ao plano sob confirmação. Painel lateral no desktop, janela no mobile. O Copilot é um motor determinístico, **não uma previsão infalível nem uma IA generativa**.
+
+Consulta [`RELEASE-NOTES-V0.19.md`](RELEASE-NOTES-V0.19.md) e [`docs/COPILOT.md`](docs/COPILOT.md) antes da utilização em pista. **Executa `npm install && npm test && npm run build` no teu Mac antes de publicar**, porque este ambiente não conseguiu instalar as dependências React/Vite.
+
+---
+
 # Pitmaster V0.18 — Fluxo de prova e interface limpa
 
 Consulta `RELEASE-NOTES-V0.18.md` para novidades e limitações.

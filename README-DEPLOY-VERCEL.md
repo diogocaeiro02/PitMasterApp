@@ -1,3 +1,25 @@
+# Pitmaster V0.19 — atualização do repositório existente
+
+Esta versão inclui o **Copilot estratégico**. Para atualizar o repositório que já ligaste à Vercel (`PitMasterApp`), substitui os ficheiros antigos **na raiz do repositório** pelos da V0.19, sem criar uma pasta `pitmaster-v0.19` dentro dele. Confirma primeiro no Mac:
+
+```bash
+npm install
+npm test
+npm run build
+```
+
+Depois de os três comandos passarem:
+
+```bash
+git add -A
+git commit -m "Pitmaster V0.19 - Copilot estrategico"
+git push origin main
+```
+
+A Vercel volta a publicar automaticamente caso o projeto continue associado à branch `main`. Se a compilação não passar, **não publiques**; usa as mensagens do Terminal para corrigir o erro primeiro. O conector Apex/RaceFacer continua experimental, e não há sincronização entre dispositivos.
+
+---
+
 # PITMASTER V0.18 – GitHub, Vercel e workflow simplificado
 
 ## Prova de 29/11/2026 – formato 10+30

@@ -1,0 +1,159 @@
+/* PITMASTER 0.20 — One competition, one workspace. High contrast, compact and race-ready. */
+:root { --accent:#b5ff5e; --pm-green:#b5ff5e; --pm-live:#3ce9f4; --pm-virtual:#cb9aff; --pm-warning:#ffcc68; --pm-critical:#ff6975; --pm-layout:16px; }
+body { background:#080d16; }
+.ambient{background:radial-gradient(ellipse 730px 280px at 85% -9%,rgba(28,154,199,.17),transparent 80%),radial-gradient(ellipse 580px 340px at 10% 12%,rgba(116,73,230,.11),transparent 80%),linear-gradient(180deg,#0c1421,#080d16 65%)}
+.topbar{background:#0b1524!important;border-bottom:1px solid #2b3b4e!important}
+.brandMark{background:#b5ff5e;box-shadow:0 0 28px rgba(181,255,94,.12)}
+.pageNav{background:#182337!important;border-color:#374761!important;gap:4px;box-shadow:none}
+.pageNav button{color:#bbcadc!important;font-size:12px;padding:11px 13px;gap:7px;min-height:44px}
+.pageNav button.selected{background:#365b32!important;color:#e0ffbc!important;box-shadow:inset 0 0 0 1px #8cd76d!important}
+.pageNav button:hover:not(.selected){color:#fff!important;background:#273a53!important}
+.pageNav .navReturn{color:#86e4ee!important;border-right:1px solid #385066;border-radius:4px;padding-right:17px}
+.pageNav.hubNav button{min-width:132px}
+.workspace--races,.workspace--calendar{max-width:1510px;padding-top:36px}
+/* The library is not the selected-race workspace. Keep only the setup wizard inside a race. */
+.raceWizardPage .raceHubGrid{display:block!important}
+.raceWizardPage .raceHubLibrary{display:none!important}
+.raceWizardPage .raceHubMain{width:100%;display:grid;grid-template-columns:1fr;gap:13px}
+.raceWizardPage .raceHubIntro h1{font-size:clamp(28px,3vw,40px)}
+.raceWizardPage .raceHubIntro p{max-width:66ch}
+/* Global hub: one obvious route in, no race dashboard until entry. */
+.hubPage{min-width:0;display:grid;gap:22px}
+.hubHeading{display:flex;align-items:end;justify-content:space-between;gap:24px;min-width:0}
+.hubHeading>div:first-child{max-width:710px}
+.hubKicker{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:850;letter-spacing:.13em;color:#74e9ee}
+.hubHeading h1{font:800 clamp(33px,4vw,52px) 'Space Grotesk',sans-serif;letter-spacing:-.06em;line-height:1.04;margin:12px 0 10px;color:#fff}
+.hubHeading h1 span{color:#b5ff5e}
+.hubHeading p{color:#b2c5da;font-size:14px;line-height:1.5;margin:0}
+.hubHeadingActions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.hubHeading .solidBtn,.hubHeading .quietBtn{min-height:47px;border-radius:11px;padding:12px 18px;font-size:13px;gap:8px}
+.hubToolbar{display:flex;align-items:center;justify-content:space-between;gap:13px;min-width:0}
+.hubSearch{display:flex;align-items:center;gap:10px;min-width:0;flex:1;max-width:600px;background:#142236;color:#8aa7bb;padding:0 15px;border:1px solid #31485b;border-radius:12px;min-height:49px}
+.hubSearch input{width:100%;background:transparent;color:#fff;outline:none;border:0;font-size:14px;min-width:0}
+.hubFilters{display:flex;gap:5px;align-items:center;flex-wrap:wrap;color:#7a99ad}
+.hubFilters button{border:1px solid transparent;padding:10px 12px;border-radius:10px;color:#b5c6db;background:transparent;font-size:12px;font-weight:750}
+.hubFilters button.isActive{border-color:#638d63;background:#243d31;color:#c5ffb4}
+.hubRaceGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;align-items:stretch}
+.hubRaceCard{display:flex;flex-direction:column;align-items:stretch;text-align:left;gap:0;min-height:222px;min-width:0;padding:24px;background:linear-gradient(145deg,#182a3d,#122033);border:1px solid #364d64;border-top:3px solid #4fe0ec;border-radius:16px;box-shadow:0 15px 32px rgba(0,0,0,.14);color:#fff;transition:transform .18s ease,border-color .18s ease,background .18s ease}
+.hubRaceCard--preparation{border-top-color:#bd98ff}
+.hubRaceCard--live{border-top-color:#b5ff5e}
+.hubRaceCard--finished{border-top-color:#7e99b1}
+.hubRaceCard:hover{transform:translateY(-3px);border-color:#8deacf;background:linear-gradient(145deg,#20364b,#152637)}
+.hubRaceCardTop{display:flex;justify-content:space-between;align-items:center;color:#b5cadc;margin-bottom:16px}
+.hubStatus{font-size:10px;font-weight:850;padding:6px 10px;border-radius:999px;background:#272641;color:#ceb0ff;border:1px solid #58497b;text-transform:uppercase;letter-spacing:.04em}
+.hubStatus.status-live{background:#203e31;color:#c2ffb5;border-color:#5b9e63}
+.hubStatus.status-finished{background:#253043;color:#b2c9dc;border-color:#50617b}
+.hubRaceCard h2{color:#f7fbff;font-size:22px;line-height:1.15;letter-spacing:-.045em;margin:0 0 7px;overflow-wrap:anywhere}
+.hubRaceCard p{font-size:13px;color:#b5c9d9;margin:0;min-height:22px}
+.hubRaceMeta{display:flex;flex-wrap:wrap;gap:8px 17px;border-top:1px solid #35495c;margin-top:auto;padding-top:14px;font-size:11px;color:#a6c1d1}
+.hubRaceMeta span{display:inline-flex;gap:6px;align-items:center}
+.hubRaceEnter{display:flex;align-items:center;gap:7px;color:#baff76;font-size:12px;font-weight:850;margin-top:16px}
+.hubEmpty{grid-column:1/-1;min-height:250px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:9px;border:1px dashed #496079;border-radius:18px;background:#162337;padding:20px}
+.hubEmpty h2{margin:0}.hubEmpty p{color:#b1c2d0;font-size:13px}
+.hubFootNote{color:#92a9bd;font-size:12px;line-height:1.5;margin:0}
+/* Calendar: actual dates only; no invented events. */
+.calendarLayout{display:grid;grid-template-columns:minmax(0,2fr) minmax(260px,.78fr);gap:17px;align-items:start}
+.calendarMain,.calendarAgenda{background:#142234;border:1px solid #334b61;border-radius:16px;padding:20px;min-width:0}
+.calendarMonthHeading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:18px}
+.calendarMonthHeading h2{margin:0;text-transform:capitalize;font-size:21px;color:#fff}
+.calendarMonthActions{display:flex;gap:6px;align-items:center}
+.calendarMonthActions button{background:#21344b;border:1px solid #3c526a;color:#e2ecf5;border-radius:9px;min-width:39px;height:39px;display:grid;place-items:center;padding:0 10px;font-size:12px}
+.calendarGrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.calendarWeekday{text-align:center;padding:9px 0;font-size:11px;font-weight:800;color:#85a9bc}
+.calendarDay{background:#1b2c41;border:1px solid #2d4258;border-radius:8px;min-height:93px;padding:8px;display:flex;flex-direction:column;gap:5px;min-width:0}
+.calendarDay.isOutside{background:#121d2b;border-color:#192c3d}
+.calendarDay.isToday{border-color:#b5ff5e;box-shadow:inset 0 0 0 1px #b5ff5e44}
+.calendarDay>span{font-size:12px;color:#c0d0e0;font-weight:800}
+.calendarDay.isToday>span{color:#b5ff5e}
+.calendarDay button{background:#294b43;border:1px solid #427c73;color:#d4ffff;border-radius:6px;padding:6px;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;min-width:0;font-size:10px}
+.calendarDay small{color:#9edce4;font-size:9px}
+.calendarAgenda h2{font-size:17px;display:flex;align-items:center;gap:8px;color:#fff;margin:3px 0 18px}
+.calendarAgenda h2 span{margin-left:auto;color:#b5ff5e}
+.calendarAgenda h3{font-size:12px;color:#acbdd0;margin:25px 0 10px}
+.calendarAgendaItem{display:grid;grid-template-columns:66px minmax(0,1fr) 18px;gap:3px 10px;align-items:center;width:100%;background:#21344a;border:1px solid #344d63;border-radius:10px;color:#fff;margin-bottom:8px;padding:12px;text-align:left}
+.calendarAgendaItem time{grid-row:span 2;color:#86e3f0;font-weight:800;font-size:11px}
+.calendarAgendaItem strong{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.calendarAgendaItem small{font-size:11px;color:#9eb8cc;grid-column:2}
+.calendarAgendaItem svg{grid-column:3;grid-row:1/3}
+.calendarAgendaItem:not(:has(time)){grid-template-columns:minmax(0,1fr) 18px}
+.calendarAgendaItem:not(:has(time)) small{grid-column:1}
+.calendarAgendaItem:not(:has(time)) svg{grid-column:2}
+/* Empty race: never show Palmela archive, simulated ranks or unrelated position. */
+.raceAwaiting{display:flex;flex-direction:column;align-items:flex-start;max-width:820px;padding:34px;background:linear-gradient(130deg,#172e41,#1a2336);border:1px solid #39617b;border-radius:18px;gap:15px;margin-top:14px}
+.raceAwaitingIcon{width:58px;height:58px;background:#1f4554;border:1px solid #399eae;color:#7ef0ff;border-radius:15px;display:grid;place-items:center}
+.raceAwaiting h2{margin:0;color:#f7fbff;font-size:clamp(24px,3vw,31px);letter-spacing:-.04em}
+.raceAwaiting p{margin:0;color:#c0d1e1;font-size:14px;line-height:1.58;max-width:62ch}
+.raceAwaitingActions{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
+.raceAwaitingActions button{min-height:47px}
+.raceAwaitingSteps{display:flex;flex-wrap:wrap;gap:7px 17px;color:#a8bed2;font-size:11px;padding-top:15px;border-top:1px solid #364e66;width:100%}
+.raceAwaitingSteps span{display:flex;gap:6px;align-items:center}
+/* Lap Performance is always first when the race feed is open, compact when data is missing. */
+.lapSpotlight{display:flex;align-items:center;gap:15px;min-height:79px;text-align:left;width:100%;color:#fff;background:linear-gradient(105deg,#30224b,#1d2b40 82%);border:1px solid #8063b8;border-left:4px solid #c69bff;border-radius:14px;padding:14px 20px;margin:0 0 15px;min-width:0}
+.lapSpotlightIcon{display:grid;place-items:center;width:44px;height:44px;background:#493465;border-radius:11px;color:#e6d3ff;flex:none}
+.lapSpotlightTitle{display:flex;flex-direction:column;gap:5px;min-width:0;flex:1}
+.lapSpotlightTitle b{font-size:12px;font-weight:850;letter-spacing:.09em;color:#d6baff}
+.lapSpotlightTitle small{font-size:12px;color:#c4cce1;overflow-wrap:anywhere}
+.lapSpotlight>strong{font-size:clamp(20px,2.4vw,29px);font-variant-numeric:tabular-nums;color:#f1e4ff;white-space:nowrap}
+.lapSpotlightOpen{display:flex;align-items:center;gap:6px;color:#e2cafa;font-size:11px;white-space:nowrap}
+.lapSpotlight.isWaiting{min-height:62px;padding:10px 15px;background:#1c2335;border-color:#54476d}
+.lapSpotlight.isWaiting .lapSpotlightIcon{width:36px;height:36px}
+.lapSpotlight.isWaiting>strong{font-size:21px;color:#afbdd3}
+/* Reduce bulk. One concise clear hierarchy, not enormous cards with empty states. */
+.workspace--race .heroMetrics{gap:12px!important;margin-bottom:14px!important}
+.workspace--race .heroMetrics>.metric{min-height:128px!important;padding:16px 18px!important;justify-content:center!important}
+.workspace--race .heroMetrics .positionValue{font-size:39px!important}
+.workspace--race .heroMetrics .metricLabel{letter-spacing:.075em;font-size:10px!important}
+.workspace--race .heroMetrics .lapTimeLine strong{font-size:clamp(19px,2.5vw,25px)!important}
+.workspace--race .dashboardGrid{gap:13px!important}
+.workspace--race .dashboardGrid .card{padding:16px!important}
+.workspace--race .cardHeading{margin-bottom:13px}
+.workspace--race .cardHeading h2{font-size:clamp(17px,1.9vw,21px)}
+.workspace--race .cardHeading p{font-size:11px}
+.workspace--race .trackCard .neighbor{padding:11px 14px;min-height:83px}
+.workspace--race .trackCard .trajectory{height:16px}
+.workspace--race .trackCard .mineInfo{margin-top:7px}
+.workspace--race .trackCard .signalNote{margin-top:9px;padding-top:9px}
+.workspace--race .stintCard .stintDetails{gap:8px}
+.workspace--race .virtualRivalsCard .virtualRivalRow{padding:10px 11px}
+.trackCompact{display:flex;align-items:center;gap:13px;padding:17px 19px;background:#172a3d;border:1px dashed #426078;border-radius:12px;color:#82deed;min-width:0}
+.trackCompact span{display:flex;flex-direction:column;gap:4px;min-width:0}
+.trackCompact b{font-size:14px;color:#dceffc}
+.trackCompact small{font-size:11px;color:#adc2d4}
+.virtualRivalsCard:has(.virtualNoData){padding:15px!important}
+.virtualRivalsCard:has(.virtualNoData) .virtualNoData{padding:11px!important;min-height:0}
+.virtualRivalsCard:has(.virtualNoData) .cardHeading{margin-bottom:8px!important}
+.workspace--race .intelligenceGrid .intelTile{min-height:104px!important}
+/* Strategy: no giant four-card scorecard when nothing has been planned. */
+.strategyScreen .strategyScoreGrid{gap:10px;margin-top:12px;margin-bottom:13px}
+.strategyScreen .strategyScore{min-height:84px;padding:14px 16px;display:flex;flex-direction:column;justify-content:center;gap:7px;border-radius:12px}
+.strategyScreen .strategyScore strong{font-size:clamp(20px,2.2vw,27px);line-height:1.13}
+.strategyScreen .strategyScore small{font-size:10px;letter-spacing:.055em}
+.strategyScreen .strategyScore span{font-size:10px}
+.strategyScreen .strategyPlanner{padding:19px;border-radius:14px}
+.strategyScreen .plannerHeading{margin-bottom:13px}
+.strategyScreen .planSummary{border-radius:10px}
+.strategyScreen .emptyPlanner{min-height:116px;padding:18px}
+.strategyScreen .strategySandbox{background:linear-gradient(100deg,#1d352e,#1b2840);border-color:#437a60}
+.strategyScreen .strategySandbox.isDraft{background:linear-gradient(100deg,#302649,#1e2940);border-color:#a77add}
+.strategyScreen .strategyHeading{margin-bottom:18px}
+/* Stable values on rapid timing updates. */
+:where(.workspace) :is(.lapSpotlight,.positionValue,.lapTimeLine,.neighborGap,.stintHudDigits,.pitHistoryItem b){font-variant-numeric:tabular-nums lining-nums}
+:where(.workspace) .lapTimeLine strong{font-variant-numeric:tabular-nums;min-width:8ch;text-align:right}
+@media(max-width:1250px){.hubRaceGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.calendarLayout{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:1150px){.pageNav.raceNav{justify-content:stretch;gap:3px}.pageNav.raceNav button{padding:9px 6px;font-size:11px}}
+@media(max-width:850px){.topbar{flex-wrap:wrap}.pageNav.hubNav{display:flex;gap:6px;order:4;justify-content:center}.pageNav.raceNav{display:flex;order:4;flex:1 1 100%;width:100%;gap:3px;overflow-x:auto;scrollbar-width:thin;justify-content:flex-start}.pageNav.raceNav button{white-space:nowrap;min-width:max-content;max-width:none;padding:10px 12px;font-size:11px;flex:0 0 auto}.hubRaceGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.hubHeading{align-items:flex-start;flex-wrap:wrap}.hubToolbar{flex-wrap:wrap}.hubSearch{max-width:none;flex-basis:100%}.hubFilters{width:100%}.calendarDay{min-height:73px;padding:6px}.calendarDay button{font-size:9px}.calendarMain{padding:13px}}
+@media(max-width:620px){.workspace--races,.workspace--calendar{padding:18px 13px 22px}.pageNav.hubNav{display:flex!important;grid-template-columns:none!important;width:100%;justify-content:stretch}.pageNav.hubNav button{flex:1!important;min-height:48px!important;display:flex!important;flex-direction:row!important;gap:7px!important;font-size:12px!important}.pageNav.raceNav{display:flex!important;grid-template-columns:none!important;overflow-x:auto!important;scroll-snap-type:x proximity}.pageNav.raceNav button{flex:0 0 auto!important;min-width:max-content!important;font-size:11px!important;min-height:50px!important;padding:8px 10px!important;display:flex!important;flex-direction:row!important;white-space:nowrap!important;scroll-snap-align:start}.pageNav.raceNav button svg{width:16px!important;height:16px!important}.hubRaceGrid{grid-template-columns:1fr;gap:10px}.hubRaceCard{min-height:182px;padding:18px}.hubRaceCard h2{font-size:20px}.hubHeading h1{font-size:38px}.hubHeadingActions{width:100%}.hubHeadingActions button{flex:1}.hubToolbar{gap:9px}.hubFilters{overflow-x:auto;flex-wrap:nowrap;white-space:nowrap}.hubFilters button{padding:9px 7px;font-size:11px}.calendarGrid{gap:3px}.calendarDay{min-height:59px;padding:4px}.calendarDay button{font-size:8px;padding:3px}.calendarMonthHeading h2{font-size:16px}.calendarMonthActions button{min-width:33px;height:35px}.calendarAgenda{padding:13px}.raceAwaiting{padding:22px 18px;gap:12px}.raceAwaitingActions{width:100%;flex-direction:column}.raceAwaitingActions button{width:100%}.lapSpotlight{gap:8px;min-height:70px;padding:12px}.lapSpotlightIcon{width:35px;height:35px}.lapSpotlightTitle b{font-size:10px}.lapSpotlightTitle small{font-size:10px}.lapSpotlight>strong{font-size:19px}.lapSpotlightOpen{font-size:0}.lapSpotlightOpen svg{width:17px}.workspace--race .heroMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}.workspace--race .heroMetrics>.metric{min-height:116px!important;padding:12px!important}.workspace--race .heroMetrics>.metric:nth-child(3){grid-column:span 2;min-height:90px!important}.strategyScreen .strategyScoreGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.strategyScreen .strategyScore{min-height:82px;padding:12px}}
+@media(max-width:380px){.workspace--race .heroMetrics{grid-template-columns:1fr!important}.workspace--race .heroMetrics>.metric:nth-child(3){grid-column:auto}.hubHeading h1{font-size:33px}.hubKicker{font-size:9px}.calendarDay button{font-size:0;min-height:6px;padding:0 3px}.calendarDay button:before{content:'•';font-size:16px}.strategyScreen .strategyScore{min-height:73px}}
+@media(prefers-reduced-motion:reduce){.hubRaceCard,.lapSpotlight,.calendarAgendaItem{transition:none!important}}
+
+.app--hub{padding-bottom:0!important}
+.raceAwaitingManual{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;margin-top:5px;padding:13px 15px;border:1px solid #3e586d;border-radius:11px;background:#1a3043;flex-wrap:wrap}
+.raceAwaitingManual>div{display:flex;flex-direction:column;gap:6px}
+.raceAwaitingManual b{font-size:10px;letter-spacing:.07em;color:#9be6ef;text-transform:uppercase}
+.raceAwaitingManual span{font-size:15px;color:#fff;font-weight:700}
+.raceAwaitingManual .quietBtn{min-height:44px}
+@media(max-width:620px){.raceAwaitingManual .quietBtn{width:100%}}
+
+.raceManualActions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.raceManualActions .quietBtn{min-height:44px}
+@media(max-width:620px){.raceManualActions{width:100%;flex-direction:column}.raceManualActions .quietBtn{width:100%}}

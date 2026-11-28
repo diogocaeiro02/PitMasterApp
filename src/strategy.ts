@@ -38,7 +38,7 @@ export function restoreStrategy(raw: string | null): Strategy {
     for (const key of RULE_KEYS) rules[key] = validNumber(item.rules?.[key])
     const plan = Array.isArray(item.plan) ? item.plan
       .filter(s => s && typeof s.id === 'string' && typeof s.driver === 'string' && Number.isFinite(s.minutes) && s.minutes >= 0)
-      .slice(0, 120).map(s => ({ id: s.id, driver: s.driver, minutes: Number(s.minutes) })) : []
+      .slice(0, 120).map(s => ({ id: s.id, driver: s.driver, minutes: Number(s.minutes), ...(typeof s.pitSeconds === 'number' && Number.isFinite(s.pitSeconds) && s.pitSeconds >= 0 ? { pitSeconds: s.pitSeconds } : {}) })) : []
     return { rules, plan }
   } catch { return structuredClone(EMPTY_STRATEGY) }
 }

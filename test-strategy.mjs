@@ -13,6 +13,7 @@ assert.match(generatePlan({...rules,minStintMinutes:46},drivers).error,/mínimo/
 assert.match(generatePlan({...rules,raceMinutes:100, minTeamStints:10},drivers).error,/Não existe/)
 assert.match(generatePlan(EMPTY_RULES,drivers).error,/define/)
 assert.equal(restoreStrategy(JSON.stringify({rules,plan:result.plan})).plan.length,10)
+assert.equal(restoreStrategy(JSON.stringify({rules,plan:[{id:'one',driver:'Piloto A',minutes:45,pitSeconds:181.104}]})).plan[0].pitSeconds,181.104)
 assert.equal(restoreStrategy('invalid json').plan.length,0)
 assert.equal(actualDriverStats([{driver:'A',startedAt:0,endedAt:60000},{driver:'A',startedAt:60000}],120000).A.minutes,2)
 console.log('11 testes de estratégia passaram.')
