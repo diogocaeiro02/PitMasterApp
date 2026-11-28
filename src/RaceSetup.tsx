@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react'
-import { ArrowLeft, ArrowRight, CalendarDays, Check, CheckCircle2, Circle, ClipboardList, Copy, FileJson2, Flag, Gauge, Link2, Plus, Radio, Search, Trash2, Upload, Clock3, ShieldCheck, SlidersHorizontal, Info, X } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { ArrowLeft, ArrowRight, CalendarDays, Check, CheckCircle2, Circle, ClipboardList, Copy, FileJson2, Flag, Gauge, Link2, Plus, Radio, Trash2, Upload, Clock3, ShieldCheck, SlidersHorizontal, Info, X } from 'lucide-react'
 import type { RaceCollection, RaceProfile } from './races'
 import type { RaceRules } from './strategy'
 import { formatPitDurationSeconds, parsePitDurationSeconds } from './pitTime'
@@ -17,7 +17,6 @@ type Props = {
   onImport: (file: File) => void; importMessage: string
   onPalmelaSprintPreset:()=>void; qualifyingMinutes?:number|null
 }
-const statusText = {preparation:'Em preparação',live:'Em curso',finished:'Terminada'}
 const steps: {id:Step;label:string;description:string}[] = [
   {id:'identity',label:'Prova',description:'Nome, pista e kart'},
   {id:'rules',label:'Regulamento',description:'Duração e limites'},
@@ -28,9 +27,7 @@ const steps: {id:Step;label:string;description:string}[] = [
 const isPlaceholder = (s:string)=>/^Piloto\s+\d+$/i.test(s)
 const validPositive = (n:number|null)=>n!==null&&Number.isFinite(n)&&n>0
 
-export function RaceSetup({collection, active, drivers, planCount, timingConnected,rules,onRulesChange,onAddDriver,onRemoveDriver,onUpdate,onCreate,onDuplicate,onSelect,onRemove,onViewRace,onViewStrategy,onViewQualifying,phaseLabel,onImport,importMessage,onPalmelaSprintPreset,qualifyingMinutes}: Props) {
-  const [query,setQuery] = useState('')
-  const [filter,setFilter] = useState<'all'|'preparation'|'live'|'finished'>('all')
+export function RaceSetup({collection, active, drivers, planCount, timingConnected,rules,onRulesChange,onAddDriver,onRemoveDriver,onUpdate,onCreate,onDuplicate,onRemove,onViewRace,onViewStrategy,onViewQualifying,phaseLabel,onImport,importMessage,qualifyingMinutes}: Props) {
   const [step,setStep] = useState<Step>('identity')
   const [advanced,setAdvanced] = useState(false)
   const [driverName,setDriverName] = useState('')
@@ -44,7 +41,6 @@ export function RaceSetup({collection, active, drivers, planCount, timingConnect
   }
   useEffect(()=>{setStep('identity');setAdvanced(false);setDriverName('');setDriverError('');setPitError('')},[active.id])
   useEffect(()=>{setPitDraft(rules.minPitSeconds===null?'':formatPitDurationSeconds(rules.minPitSeconds))},[rules.minPitSeconds])
-  const filtered = useMemo(()=>collection.races.filter(r=>(filter==='all'||(r.status||'preparation')===filter)&&`${r.name} ${r.track} ${r.date}`.toLowerCase().includes(query.toLowerCase())).sort((a,b)=>(b.date||'').localeCompare(a.date||'') || b.createdAt-a.createdAt),[collection.races,query,filter])
   const realDrivers=drivers.filter(d=>d.trim()&&!isPlaceholder(d))
   const identityReady=active.name.trim()!==''&&active.name!=='Nova prova'&&!!active.track.trim()&&!!active.kart.trim()
   const ruleErrors:string[]=[]
@@ -82,18 +78,9 @@ export function RaceSetup({collection, active, drivers, planCount, timingConnect
   </label>
   const source=PROVIDERS[active.provider]
   return <div className="racesHub raceWizardPage">
-    <div className="raceHubIntro"><div><div className="overline">PITMASTER / RACE HUB</div><h1>Preparar prova</h1><p>Estás a configurar <strong>{active.name}</strong>. Regra, pilotos e Live Timing desta prova, sem interferir nas restantes.</p></div><button className="solidBtn" onClick={onCreate}><Plus size={18}/> Nova prova</button></div>
+    <div className="raceHubIntro"><div><div className="overline">PITMASTER / RACE HUB</div><h1>Preparar prova</h1><p>Define o essencial agora. Podes regressar e ajustar as regras durante a prova sem afetar outras corridas.</p></div><button className="quietBtn" onClick={onCreate}><Plus size={18}/> Outra prova</button></div>
     <div className="raceHubGrid">
-      <aside className="card raceHubLibrary" aria-label="Biblioteca de provas">
-        <div className="raceHubSectionTitle"><h2><Flag size={19}/> Provas guardadas</h2><span className="sectionTag">{collection.races.length}</span></div>
-        <div className="raceHubFilters">{([['all','Todas'],['preparation','A preparar'],['live','Em curso'],['finished','Terminadas']] as const).map(([id,label])=><button type="button" key={id} className={filter===id?'selected':''} onClick={()=>setFilter(id)}>{label}</button>)}</div>
-        <label className="raceHubSearch"><Search size={17}/><input placeholder="Pesquisar provas ou pistas…" value={query} onChange={e=>setQuery(e.target.value)} aria-label="Pesquisar provas"/></label>
-        <div className="raceHubList">{filtered.map(r=><button type="button" key={r.id} className={`raceHubListItem ${r.id===active.id?'isSelected':''}`} onClick={()=>onSelect(r.id)}><span className="raceHubItemTop"><strong>{r.name}</strong>{r.id===active.id&&<CheckCircle2 size={16}/>}</span><span className="raceHubSub">{r.track||'Pista por definir'} · {r.date||'Sem data'}</span><span className={`raceHubStatus status-${r.status||'preparation'}`}>{statusText[r.status||'preparation']}</span></button>)}{!filtered.length&&<p className="hint">Nenhuma prova corresponde à pesquisa.</p>}</div>
-        <button className="quietBtn full" type="button" onClick={onDuplicate}><Copy size={15}/> Duplicar configuração</button>
-        {collection.races.length>1&&<button className="textButton dangerText" onClick={()=>onRemove(active.id)}><Trash2 size={15}/> Apagar prova selecionada</button>}
-      </aside>
       <div className="raceHubMain">
-        <section className="card sprintPresetCard" aria-label="Preparação rápida de prova curta"><div><span className="overline">PREPARAÇÃO RÁPIDA</span><h2>10 min de qualificação + 30 min de corrida</h2><p>Preenche Palmela, a data e as durações. Os pits e limites de stint ficam por confirmar no regulamento.</p></div><button type="button" className="solidBtn" onClick={()=>{onPalmelaSprintPreset();setStep('identity')}}><Flag size={17}/> Usar formato 10 + 30</button></section>
         <section className="card wizardHeadline"><div className="wizardHeadlineText"><span className="overline"><span className="limeDot"/> PROVA SELECIONADA</span><h2>{active.name}</h2><p>{active.track||'Kartódromo por definir'} · Kart #{active.kart||'—'} · {phaseLabel}</p></div><div className="wizardProgressSummary"><strong>{passed}/{checks.length}</strong><span>itens preparados</span></div></section>
         <section className="card wizardShell" aria-label="Assistente de configuração da prova">
           <div className="wizardHeader"><div><span className="overline">CONFIGURAÇÃO GUIADA</span><h2>Prepara a corrida</h2><p>Começa pelo essencial. As opções técnicas ficam disponíveis quando precisares.</p></div><span className="wizardSaved"><Check size={14}/> Guardado automaticamente</span></div>
@@ -122,6 +109,7 @@ export function RaceSetup({collection, active, drivers, planCount, timingConnect
           </div>
           <div className="wizardFooter"><button className="quietBtn" type="button" disabled={stepIndex===0} onClick={()=>setStep(steps[Math.max(0,stepIndex-1)].id)}><ArrowLeft size={16}/> Anterior</button><span>Passo {stepIndex+1} de {steps.length}</span>{stepIndex<steps.length-1?<button className="solidBtn" type="button" onClick={()=>{if(step==='rules'&&!commitPit())return;setStep(steps[stepIndex+1].id)}}>Continuar <ArrowRight size={17}/></button>:<button className="solidBtn" type="button" onClick={onViewRace}><Gauge size={17}/> Abrir corrida</button>}</div>
         </section>
+        <details className="raceSetupManage"><summary><SlidersHorizontal size={17}/> Gestão da prova <span>Duplicar ou apagar</span></summary><div className="raceSetupManageActions"><button className="quietBtn" type="button" onClick={onDuplicate}><Copy size={16}/> Duplicar configuração</button>{collection.races.length>1&&<button type="button" className="quietBtn dangerText" onClick={()=>onRemove(active.id)}><Trash2 size={16}/> Apagar prova</button>}</div></details>
         <details className="raceHubAdvanced card"><summary><FileJson2 size={17}/> Importação de cronometragem <span>Ferramenta avançada</span></summary><div className="raceHubImportContent"><p className="hint">Importa um ficheiro JSON no formato universal Pitmaster. Não interpreta automaticamente qualquer exportação RaceFacer.</p><label className="importDrop"><Upload size={21}/><strong>Escolher ficheiro .json</strong><span>Máximo 5 MB</span><input type="file" accept="application/json,.json" onChange={e=>{const f=e.target.files?.[0];if(f)onImport(f);e.target.value=''}}/></label>{importMessage&&<p className="setupImportResult" role="status">{importMessage}</p>}<p className="hint">A importação não cria passagens de setor ou meta fictícias.</p></div></details>
       </div>
     </div>

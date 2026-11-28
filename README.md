@@ -1,3 +1,31 @@
+# Pitmaster V0.21 — Racing UI / Workflow
+
+**Versão atual: V0.21.0.** Reestruturação visual com tipografia Barlow / Barlow Condensed, paleta azul-noite com verde racing, ciano e violeta, espaçamentos mais regulares em desktop e mobile, cartões compactos e atualização numérica sem saltos visuais.
+
+- **Provas:** biblioteca com filtros, sem cartões de destaque para formatos específicos.
+- **Calendário:** resumo da época, vista de mês e de lista, estado dos eventos por cor, seleção de dia e agenda.
+- **Preparar:** assistente de cinco passos em largura total, sem biblioteca duplicada; gestão avançada recolhível.
+- **Corrida:** Lap Performance primeiro; cards compactos por prioridade; Copilot e módulos anteriores preservados.
+- **Estratégia:** apresenta diretamente o plano de stints; sem quatro cartões vazios quando não existe plano; ações de criação rápidas.
+- **Identidade:** títulos fortes e condensados, botões com áreas de toque adequadas, microanimações respeitando `prefers-reduced-motion`.
+
+Não altera os cálculos de cronometragem, os limites regulamentares ou o fluxo de Live Timing. O nome da equipa permanece editável em cada prova.
+
+## Executar e validar
+
+```bash
+npm install
+npm test
+npm run build
+npm run dev
+```
+
+**Requisito de publicação:** só fazer `git push` depois de `npm run build` terminar sem erros no teu computador. Não foi possível concluir o build React/Vite neste ambiente devido ao acesso indisponível ao registo npm.
+
+Consulta `RELEASE-NOTES-V0.21.md` e `README-DEPLOY-VERCEL.md`. Os dados permanecem armazenados localmente no navegador e as fontes Apex/RaceFacer não estão totalmente validadas em produção.
+
+---
+
 # Pitmaster V0.20 — Race Hub & Calendar
 
 **Versão mais recente:** V0.20. Entrada pela biblioteca de Provas e Calendário; ao abrir cada prova, aparecem Preparar, Qualificação, Corrida, Classificação e Estratégia. Lap Performance no topo do painel Corrida, cartões mais compactos, cores mais contrastantes e dados fictícios isolados do Live Timing real.

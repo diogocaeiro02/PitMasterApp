@@ -1,0 +1,352 @@
+/* PITMASTER V0.21 — RACE CONTROL DESIGN SYSTEM
+   All colours are semantic. Only data changes during timing; layout stays fixed. */
+:root{
+  font-family:'Barlow',Arial,sans-serif;
+  color:#edf5ff;background:#090e18;
+  --base:#090e18;--panel:#161f30;--soft:#1c293d;--line:#344459;--sub:#aabed2;
+  --accent:#bcff44;--pm-green:#bcff44;--pm-live:#40e7ff;--pm-virtual:#b48dff;
+  --pm-warning:#ffc04d;--pm-critical:#ff5f72;--pm-layout:16px;
+  --r-card:#151f30;--r-card-high:#1c293d;--r-border:#35465c;
+  --r-accent:#bcff44;--r-cyan:#40e7ff;--r-purple:#b48dff;
+  --r-orange:#ffc04d;--r-red:#ff5f72;--r-muted:#aabed2;
+  --r-head:'Barlow Condensed','Arial Narrow',Impact,sans-serif;
+  --r-body:'Barlow',Arial,sans-serif;
+  --r-round:12px;--r-gap:16px;
+}
+html{scroll-behavior:smooth;scroll-padding-top:14px}
+body{font-family:var(--r-body)!important;background:var(--base);font-size:14px}
+button,input,select,textarea{font-family:var(--r-body)!important}
+button{transition:background .16s ease,color .16s ease,border-color .16s ease,filter .16s ease,box-shadow .16s ease}
+button:hover:not(:disabled){filter:brightness(1.09)}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid #40e7ff;outline-offset:3px}
+button:active:not(:disabled){filter:brightness(.93)}
+.app{background:#090e18}
+.ambient{opacity:1!important;background:radial-gradient(ellipse 760px 330px at 85% -13%,rgba(51,161,205,.14),transparent 77%),radial-gradient(ellipse 680px 420px at 9% -8%,rgba(143,89,255,.085),transparent 78%),linear-gradient(180deg,#0d1421 0%,#090e18 72%)!important}
+.ambient:after{opacity:.42}
+.topbar{background:#0d1523ed!important;border-bottom:1px solid #344558!important;min-height:72px;height:auto!important;padding-block:12px!important}
+.brandMark{border-radius:8px;transform:skew(-9deg);box-shadow:0 3px 25px #bbff4536;background:var(--accent)}
+.brandType strong{font-family:var(--r-head)!important;font-size:30px;font-weight:900;letter-spacing:.03em;text-transform:uppercase;line-height:.85}
+.brandType strong span{font-weight:700}
+.brandType small{letter-spacing:.15em;font-size:9px;color:#a8bed2}
+.version{font-family:var(--r-body)!important;color:#97b1cb!important;font-size:10px}
+.pageNav{background:#172338!important;border:1px solid #35485f!important;border-radius:10px!important;gap:4px;padding:4px}
+.pageNav button{font-family:var(--r-body)!important;font-size:12px!important;font-weight:800;letter-spacing:.015em;padding:9px 13px;border-radius:7px!important;color:#c4d5e7!important}
+.pageNav button.selected{background:#293e2f!important;box-shadow:inset 0 0 0 1px #baff5a77!important;color:#d9ffab!important}
+.pageNav button:not(.selected):hover{background:#25354d!important;color:#f8fbff!important}
+.activeRaceStrip{background:#101b2c!important;border-color:#263e52!important;max-width:none}
+.activeRaceName strong{color:#fff;font-size:14px}
+.activeRaceStrip span{color:#94b1c8}
+.activeRaceConfig,.navBtn,.quietBtn,.iconBtn,.solidBtn{border-radius:9px!important;min-height:43px}
+.solidBtn{background:var(--accent)!important;border-color:var(--accent)!important;color:#10200c!important;font-weight:850!important;box-shadow:0 2px 0 #718e3770}
+.quietBtn{background:#213047!important;border:1px solid #476078!important;color:#f0f7ff!important;font-weight:750!important}
+.quietBtn:hover{background:#293e58!important}
+.workspace{max-width:1540px;padding-top:27px;padding-bottom:24px}
+.overline,.hubKicker{font-family:var(--r-body)!important;color:#83dff0;font-size:10px!important;letter-spacing:.13em!important;font-weight:850!important;text-transform:uppercase}
+.limeDot{background:var(--accent)}
+/* Headings: purposefully strong, condensed, high-contrast racing typography. */
+.hubHeading h1,.strategyHeading h1,.raceIdentity h1,.raceHubIntro h1,.qualificationPage h1,.rankingTop h1,
+.wizardHeadline h2,.hubRaceCard h2,.cardHeading h2,.calendarMonthHeading h2,.calendarAgendaHeader h2,
+.strategyPlanner h2,.raceAwaiting h2,.raceHubIntro h2,.wizardHeader h2,.plannerHeading h2{
+  font-family:var(--r-head)!important;font-weight:800!important;letter-spacing:.006em!important;line-height:1!important;text-transform:uppercase;
+}
+.hubHeading h1{font-size:clamp(43px,5.6vw,72px)!important;margin:8px 0 8px}
+.strategyHeading h1{font-size:clamp(40px,5.4vw,70px)!important;margin:6px 0 7px}
+.raceIdentity h1{font-size:clamp(38px,4vw,61px)!important;margin:8px 0 7px}
+.raceHubIntro h1{font-size:clamp(38px,4vw,58px)!important}
+.cardHeading h2{font-size:clamp(21px,2.1vw,27px)!important;margin:6px 0 4px;line-height:1.04!important}
+.hubHeading h1 span,.strategyHeading h1 span,.raceIdentity h1 em{color:var(--accent)!important}
+.hubPage{gap:17px}
+.hubHeading{align-items:center;gap:17px}
+.hubHeading p,.strategyHeading p,.raceHubIntro p{font-size:13px!important;color:#b8c8d9!important;line-height:1.5!important}
+.hubHeadingActions{gap:9px}
+.hubSearch{background:#151f31!important;border-color:#41566d!important;border-radius:10px!important;min-height:47px!important}
+.hubSearch input{font-size:14px;color:#f9fcff}
+.hubFilters button{font-weight:800!important}
+.hubFilters button.isActive{border-color:#90c85f;background:#243a29!important;color:#d6ffad!important}
+.hubRaceGrid{gap:13px;grid-template-columns:repeat(3,minmax(0,1fr))}
+.hubRaceCard{min-height:190px!important;border-radius:12px!important;padding:19px!important;border-top-width:3px;box-shadow:0 12px 25px #02091333;background:#172337!important}
+.hubRaceCard--preparation{border-top-color:var(--r-purple)}
+.hubRaceCard--live{border-top-color:var(--r-accent)}
+.hubRaceCard--finished{border-top-color:#748aa4}
+.hubRaceCard:hover{background:#1b2c44!important;border-color:#6489a3}
+.hubRaceCard h2{font-size:clamp(24px,2.8vw,32px)!important;line-height:.98!important;margin:0 0 10px!important}
+.hubRaceCard p{font-size:12px;color:#b3c9de;min-height:0;line-height:1.5}
+.hubRaceCardTop{margin-bottom:13px}
+.hubRaceMeta{padding-top:10px;gap:7px 12px;margin-top:16px}
+.hubRaceEnter{color:var(--accent)!important;margin-top:10px}
+.hubStatus{font-size:9px;letter-spacing:.07em;padding:5px 9px;border-radius:6px}
+.hubFootNote{color:#9baec0!important;font-size:11px}
+/* Compact preparation: no duplicate library, no special race preset. */
+.raceWizardPage .raceHubGrid{display:block!important}
+.raceWizardPage .raceHubMain{display:flex!important;flex-direction:column;gap:12px!important}
+.raceWizardPage .raceHubLibrary,.raceWizardPage .sprintPresetCard{display:none!important}
+.raceWizardPage .raceHubIntro{padding:0 0 8px;gap:16px}
+.raceWizardPage .raceHubIntro .quietBtn{flex-shrink:0}
+.raceWizardPage .wizardHeadline{min-height:0!important;padding:15px 19px!important;display:flex;align-items:center;justify-content:space-between;border-top:2px solid var(--r-cyan)!important;background:#15273b!important}
+.raceWizardPage .wizardHeadlineText h2{font-size:26px!important;margin:5px 0!important}
+.raceWizardPage .wizardHeadlineText p{font-size:12px!important;color:#b6cbde!important}
+.raceWizardPage .wizardProgressSummary{padding:6px 13px!important;flex:none}
+.raceWizardPage .wizardProgressSummary strong{font-family:var(--r-head)!important;font-weight:850!important;font-size:30px!important}
+.raceWizardPage .wizardShell{background:#121d2e!important;padding:0!important;border:1px solid #344b63!important;border-radius:13px!important;overflow:hidden}
+.raceWizardPage .wizardHeader{padding:19px 22px 14px!important;gap:16px}
+.raceWizardPage .wizardHeader h2{font-family:var(--r-head)!important;font-size:27px!important;text-transform:uppercase;letter-spacing:.01em!important}
+.raceWizardPage .wizardSteps{background:#101a29!important;padding:8px!important;gap:6px!important}
+.raceWizardPage .wizardStep{border-radius:8px!important;min-height:48px!important;padding:7px 10px!important}
+.raceWizardPage .wizardStep.active{background:#263e31!important;border-color:#8ccc61!important;color:#e8ffca!important}
+.raceWizardPage .wizardStepLabel{font-size:12px!important;font-weight:800}
+.raceWizardPage .wizardContent{padding:20px 22px!important}
+.raceWizardPage .wizardSectionIntro{margin-bottom:16px!important}
+.raceWizardPage .wizardSectionIntro h3{font-family:var(--r-head)!important;font-size:29px!important;text-transform:uppercase;line-height:1!important}
+.raceWizardPage .wizardFields,.raceWizardPage .wizardRules{gap:13px!important}
+.raceWizardPage .wizardFieldTitle{font-weight:750;color:#e9f2ff}
+.raceWizardPage .wizardFieldHelp{color:#a7bacd}
+.raceWizardPage :is(.wizardField input,.wizardField select,.wizardInputGroup input){background:#1a293e!important;border-color:#43556d!important;color:#fff!important;min-height:45px!important;border-radius:8px!important}
+.raceWizardPage .wizardFooter{background:#101b2a!important;border-top:1px solid #34495d!important;padding:13px 22px!important}
+.raceSetupManage{background:#121b2c;border:1px solid #2c435a;border-radius:10px;overflow:hidden}
+.raceSetupManage>summary{list-style:none;padding:14px 18px;display:flex;gap:10px;align-items:center;cursor:pointer;color:#cad9e8;font-size:12px;font-weight:800}
+.raceSetupManage>summary::-webkit-details-marker{display:none}
+.raceSetupManage>summary svg{color:#9dbae2}
+.raceSetupManage>summary span{font-size:11px;color:#859db8;font-weight:600;margin-left:auto}
+.raceSetupManageActions{padding:12px 18px;display:flex;gap:10px;flex-wrap:wrap;border-top:1px solid #31435b}
+.raceSetupManageActions .dangerText{color:#ffb6bc!important;border-color:#784453!important}
+.raceHubAdvanced.card{background:#111c2c!important;border-radius:10px!important}
+/* Global card system: stable heights, semantic colours, consistent padding. */
+.card,.metric,.intelTile,.graphCard,.strategyScore,.trackCard,.virtualRivalsCard{border-radius:12px!important;min-width:0}
+.workspace .card{background:#141f30;border-color:#354960}
+.cardHeading{margin-bottom:14px!important;gap:10px}
+.metric{min-height:0!important}
+.metric:after{opacity:.25}
+.metricLabel,.lapSpotlightTitle b,.sectionTag{font-size:10px!important;font-weight:850!important;letter-spacing:.085em!important}
+.positionValue,.metricValue,.projectedHeroValue,.stintHudDigits,.neighborGap,.pitHistoryItem b,
+.lapSpotlight>strong,.lapTimeLine strong,.strategyScore strong{
+  font-family:var(--r-head)!important;font-variant-numeric:tabular-nums lining-nums!important;font-feature-settings:'tnum' 1;
+  font-weight:800!important;letter-spacing:.012em!important;line-height:1.04;
+}
+.workspace--race .heroMetrics{gap:12px!important;margin-bottom:12px!important}
+.workspace--race .heroMetrics>.metric{min-height:119px!important;padding:16px 18px!important;overflow:hidden}
+.workspace--race .heroMetrics .positionValue{font-size:46px!important;margin-top:10px}
+.workspace--race .heroMetrics .lapTimeLine strong{font-size:clamp(25px,2.7vw,34px)!important;min-width:7ch;text-align:right}
+.workspace--race .heroMetrics .projectedHeroValue{font-size:44px!important}
+.workspace--race .heroMetrics>.metric:nth-child(1){background:#1b312a!important;border-color:#496b4d!important;border-top:3px solid var(--r-accent)}
+.workspace--race .heroMetrics>.metric:nth-child(2){background:#152a3a!important;border-color:#315f79!important;border-top:3px solid var(--r-cyan)}
+.workspace--race .heroMetrics>.metric:nth-child(3){background:#29243c!important;border-color:#68518a!important;border-top:3px solid var(--r-purple)}
+.workspace--race .heroMetrics>.metric .metricLabel{color:#c6d9e7!important}
+.lapSpotlight{background:#20243b!important;border:1px solid #7054a0!important;border-left:4px solid var(--r-purple)!important;border-radius:11px!important;min-height:60px!important;padding:10px 15px!important;margin-bottom:12px!important}
+.lapSpotlightIcon{background:#3e2e5c!important;color:#dfc4ff!important;border-radius:7px;width:36px!important;height:36px!important}
+.lapSpotlightTitle b{color:#e2c6ff!important}
+.lapSpotlightTitle small{color:#bfc9df!important}
+.lapSpotlight>strong{font-size:28px!important;color:#f8efff!important}
+.workspace--race .dashboardGrid{gap:12px!important;margin-bottom:14px!important;align-items:start}
+.workspace--race .dashboardGrid .card{padding:16px!important}
+.workspace--race .trackCard{background:#142c39;border-color:#356276}
+.workspace--race .virtualRivalsCard{background:#242038;border-color:#615078}
+.workspace--race .neighbor{background:#1b3644;border-color:#355565;border-radius:9px!important;min-height:0!important;padding:11px 13px!important}
+.workspace--race .neighborTeam strong{font-size:27px!important}
+.workspace--race .neighborGap{min-width:7.7ch;text-align:right;font-size:29px!important}
+.workspace--race .trackCard .trajectory{height:14px!important}
+.workspace--race .commandStrip{min-height:0!important;background:#222d24;border-color:#53744a;padding:13px 18px!important;margin-bottom:12px!important}
+.workspace--race .intelligenceGrid{gap:12px!important}
+.workspace--race .intelligenceGrid .intelTile{padding:14px!important;min-height:0!important}
+.raceAnalyticsDisclosure,.strategyConfigDisclosure{margin:12px 0 15px;border-color:#374a62;background:#172335}
+.raceAnalyticsDisclosure>summary,.strategyConfigDisclosure>summary{min-height:54px;padding:12px 16px}
+/* Strategy: the plan is the main content, no wall of empty scorecards. */
+.strategyScreen{min-width:0}
+.strategyHeading{margin-bottom:16px!important;align-items:center!important}
+.strategyHeading p{max-width:68ch}
+.strategyScreen .strategySandbox{background:#20273b!important;border-color:#66518a!important;border-left:4px solid var(--r-purple)!important;padding:13px 17px!important;border-radius:11px!important}
+.strategyScreen .strategySandbox.isDraft{background:#2b2243!important;border-color:#ad86ff!important}
+.strategyScreen .strategySandbox strong{font-family:var(--r-head);font-size:24px!important;font-weight:800;text-transform:uppercase}
+.strategyScreen .strategySandbox small{color:#b9c9de;font-size:11px}
+.strategyScreen .strategyScoreGrid{margin:10px 0 12px!important;gap:10px!important}
+.strategyScreen .strategyScore{background:#1b2a3b!important;border:1px solid #374d64!important;border-top:3px solid var(--r-cyan)!important;min-height:72px!important;padding:11px 14px!important;gap:3px!important}
+.strategyScreen .strategyScore:nth-child(2){border-top-color:var(--r-accent)!important}
+.strategyScreen .strategyScore:nth-child(3){border-top-color:var(--r-purple)!important}
+.strategyScreen .strategyScore:nth-child(4){border-top-color:var(--r-orange)!important}
+.strategyScreen .strategyScore small{font-size:9px!important;color:#9eb4cd!important;letter-spacing:.07em!important}
+.strategyScreen .strategyScore strong{margin:2px 0 0!important;font-size:27px!important}
+.strategyScreen .strategyScore span{font-size:10px!important;color:#a3b8d0!important}
+.strategyScreen .strategyPlanner{background:#171f33!important;border:1px solid #4f4b78!important;padding:17px 19px!important;margin:0 0 12px!important}
+.strategyScreen .plannerHeading{align-items:center;margin-bottom:12px!important}
+.strategyScreen .plannerHeading h2{font-size:29px!important}
+.strategyScreen .strategyConfigDisclosure{margin:0 0 12px!important}
+.strategyScreen .planSummary{background:#1d2940!important;border-color:#445373!important;padding:10px 13px!important}
+.strategyScreen .emptyPlanner{display:flex!important;flex-direction:row!important;align-items:center!important;text-align:left!important;gap:14px!important;padding:17px!important;min-height:0!important;background:#202842;border:1px dashed #5e668b;border-radius:11px}
+.strategyScreen .emptyPlanner svg{flex:none;color:var(--r-purple)}
+.strategyScreen .emptyPlanner>div{flex:1;min-width:0}
+.strategyScreen .emptyPlanner strong{font-family:var(--r-head)!important;font-size:24px!important;text-transform:uppercase;line-height:1!important}
+.strategyScreen .emptyPlanner p{max-width:70ch!important;font-size:12px!important;color:#bdcbe0}
+.strategyScreen .emptyPlanner>.solidBtn{flex:none}
+.strategyScreen .pitHistoryPanel{background:#142737!important;border-color:#376075!important;padding:16px 19px!important}
+.strategyScreen .strategyBottomBar{border-radius:11px!important}
+/* Numeric stability during rapid updates */
+:where(.app) :is(.lapTimeLine,.lapTimeLine strong,.neighborGap,.positionValue,.stintHudDigits,.pitClock,.pitHistoryItem b,.simClock,.qualTime,.virtualGap,.projectedHeroValue){font-variant-numeric:tabular-nums lining-nums!important;font-feature-settings:'tnum' 1;white-space:nowrap}
+:where(.app) .neighborGap{display:block;min-width:7.7ch;text-align:right}
+/* The calendar is a product feature, not a spreadsheet. */
+.calendarV21{gap:15px}
+.calendarOverview{display:grid;grid-template-columns:.75fr .75fr .75fr 1.65fr;gap:10px}
+.calendarOverview>div{display:flex;flex-direction:column;justify-content:center;min-height:87px;padding:14px 18px;background:#172438;border:1px solid #35495d;border-radius:10px;border-top:3px solid var(--r-cyan);gap:4px;min-width:0}
+.calendarOverview>div:nth-child(2){border-top-color:var(--r-accent)}
+.calendarOverview>div:nth-child(3){border-top-color:var(--r-orange)}
+.calendarOverview .calendarNextUp{background:#23253c;border-color:#5b5282;border-top-color:var(--r-purple)}
+.calendarOverview span{font-size:9px;letter-spacing:.12em;font-weight:850;color:#9fbad1}
+.calendarOverview strong{font-family:var(--r-head);font-size:36px;line-height:1;color:#f2f7ff;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.calendarOverview .calendarNextUp strong{font-size:22px;white-space:normal;line-height:1.1;max-height:2.2em}
+.calendarOverview small{font-size:11px;color:#c5cee1}
+.calendarV21Top{display:flex;align-items:center;justify-content:space-between;gap:12px;min-width:0}
+.calendarViewSwitch{display:flex;gap:4px;background:#18263a;border:1px solid #374f65;border-radius:10px;padding:4px}
+.calendarViewSwitch button{display:flex;align-items:center;justify-content:center;gap:8px;min-height:36px;padding:6px 14px;border:0;border-radius:7px;background:transparent;color:#aec4d7;font-weight:800;font-size:12px}
+.calendarViewSwitch button.selected{background:#2c4a31;color:#dfffbc;box-shadow:inset 0 0 0 1px #8cbc57}
+.calendarLegend{display:flex;align-items:center;gap:15px;flex-wrap:wrap;font-size:11px;color:#abc0d3}
+.calendarLegend>span{display:inline-flex;align-items:center;gap:6px}
+.legendDot{display:inline-block;width:7px;height:7px;border-radius:2px}
+.legendDot.scheduled{background:var(--r-purple)}.legendDot.live{background:var(--r-accent)}.legendDot.finished{background:#7d99b3}
+.calendarV21Layout{grid-template-columns:minmax(0,1.9fr) minmax(275px,.8fr)!important;gap:12px!important}
+.calendarV21 .calendarMain{background:#141f31;border-color:#354c65;border-radius:12px;padding:17px}
+.calendarV21 .calendarAgenda{background:#151d30;border-color:#3a465e;border-radius:12px;padding:17px}
+.calendarV21 .calendarMonthHeading{margin-bottom:13px}
+.calendarV21 .calendarMonthHeading h2{font-size:34px!important;line-height:.94!important;margin:3px 0 0}
+.calendarV21 .calendarMonthActions button{background:#22314a;border-color:#3e566f;min-height:37px;min-width:37px;height:37px;display:flex;justify-content:center;gap:7px}
+.calendarGridV21{gap:4px!important}
+.calendarV21 .calendarWeekday{text-transform:uppercase;letter-spacing:.08em;color:#9bb2cb;font-size:10px;font-weight:850;padding:7px 0}
+.calendarV21 .calendarDay{padding:6px!important;min-height:87px!important;background:#19263a;border:1px solid #2e425a;border-radius:7px!important;gap:5px!important;overflow:hidden}
+.calendarV21 .calendarDay.isOutside{background:#0f1827!important;border-color:#1d2b3d!important}
+.calendarV21 .calendarDay.isToday{box-shadow:inset 0 0 0 1px #b9ff57!important;border-color:#8dd151!important}
+.calendarV21 .calendarDay.isSelected{background:#243c3b!important;border-color:var(--r-cyan)!important}
+.calendarV21 .calendarDay .calendarDayDate{font-family:var(--r-head)!important;font-size:19px!important;font-weight:800!important;line-height:1;align-self:start;display:flex;align-items:center;gap:5px;padding:0!important;margin:0;background:transparent!important;border:0!important;color:#e2edf9!important;text-align:left;overflow:visible}
+.calendarV21 .calendarDay.isToday .calendarDayDate{color:var(--r-accent)!important}
+.calendarTodayText{font-family:var(--r-body);font-size:8px;letter-spacing:.09em;border-radius:3px;padding:3px 4px;border:1px solid #6f9d59;color:#ccffa5}
+.calendarV21 .calendarDay .calendarRaceChip{font-family:var(--r-body)!important;font-size:10px!important;line-height:1.1!important;background:#2c2448!important;color:#e4ccff!important;border:1px solid #6c5494!important;border-left:3px solid var(--r-purple)!important;border-radius:4px!important;padding:5px!important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left;width:100%;min-height:21px}
+.calendarV21 .calendarDay .calendarRaceChip.status-live{background:#203e34!important;color:#d6ffae!important;border-color:#587f54!important;border-left-color:var(--r-accent)!important}
+.calendarV21 .calendarDay .calendarRaceChip.status-finished{background:#263349!important;border-color:#51627a!important;border-left-color:#8ba5c4!important;color:#cad8e5!important}
+.calendarV21 .calendarDay .calendarMoreEvents{padding:0!important;margin:0;background:transparent!important;border:0!important;color:#8ce6f6;font-size:10px!important;text-align:left}
+.calendarV21 .calendarAgendaHeader{display:flex;align-items:end;justify-content:space-between;gap:10px}
+.calendarV21 .calendarAgendaHeader h2{font-size:27px!important;line-height:1;margin:7px 0 0;display:flex;align-items:baseline;gap:8px}
+.calendarV21 .calendarAgendaHeader h2 span{font-family:var(--r-body);font-size:12px;margin:0;color:var(--r-accent)}
+.calendarV21 .calendarAgendaHeader button{font-size:11px;color:#95dfee;background:transparent;border:0;padding:7px}
+.calendarAgendaIntro{font-size:12px;color:#a8bdd4;margin:8px 0 16px}
+.calendarAgendaItems{display:flex;flex-direction:column;gap:8px}
+.calendarV21 .calendarAgendaV21Item{display:grid!important;grid-template-columns:51px minmax(0,1fr) 15px!important;grid-template-rows:auto auto auto;gap:3px 10px;align-items:start;margin:0;border-radius:9px;padding:11px!important;background:#20263c;border:1px solid #4c476f;border-left:3px solid var(--r-purple);min-height:77px;color:#fff}
+.calendarV21 .calendarAgendaV21Item.status-live{background:#1c302c;border-color:#4b6c4a;border-left-color:var(--r-accent)}
+.calendarV21 .calendarAgendaV21Item.status-finished{background:#1c2a3c;border-color:#3b4e62;border-left-color:#7797b4}
+.calendarV21 .calendarAgendaV21Item>time{font-family:var(--r-head);font-size:20px;color:#ddc8ff;font-weight:800;line-height:1.05;grid-row:1/4;white-space:nowrap}
+.calendarV21 .calendarAgendaV21Item strong{grid-column:2;grid-row:1;font-family:var(--r-head);font-size:18px;text-transform:uppercase;line-height:1.1;white-space:normal;overflow-wrap:anywhere}
+.calendarV21 .calendarAgendaV21Item small{display:flex;gap:4px;align-items:center;grid-column:2;grid-row:2;color:#adbed3;font-size:11px;min-width:0}
+.calendarV21 .calendarAgendaV21Item small svg{grid-row:auto;grid-column:auto}
+.calendarAgendaState{grid-column:2;grid-row:3;color:#b3bdd3;font-size:10px;font-weight:700}
+.calendarV21 .calendarAgendaV21Item>svg:last-child{grid-column:3;grid-row:1/4;color:#a4b9cd;align-self:center}
+.calendarAgendaEmpty,.calendarListEmpty{display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:center;gap:8px;background:#19253a;border:1px dashed #40556c;border-radius:9px;padding:25px 14px;color:#b9d1e6}
+.calendarAgendaEmpty strong,.calendarListEmpty b{font-size:13px;color:#fff}
+.calendarAgendaEmpty span,.calendarListEmpty span{font-size:11px;color:#a0b7cd}
+.calendarUndated{border-top:1px solid #34455d;padding-top:14px;margin-top:17px}
+.calendarUndated h3{font-family:var(--r-head);font-size:19px!important;text-transform:uppercase;margin:0 0 8px}
+.calendarUndated h3 span{color:#bacbdb;font-size:13px}
+.calendarUndated button{width:100%;display:flex;gap:9px;align-items:center;border:0;border-radius:7px;background:#1c2d42;color:#c9d8e6;font-weight:700;font-size:12px;padding:10px;margin-bottom:6px;text-align:left}
+.calendarUndated button svg:last-child{margin-left:auto}
+.calendarBottomNote{display:flex;gap:7px;align-items:center;color:#839cb7;border-top:1px solid #33475b;margin-top:17px;padding-top:14px;font-size:10px}
+.calendarListView{display:flex;flex-direction:column;gap:8px;min-height:210px}
+.calendarListRow{display:grid;grid-template-columns:68px minmax(0,1fr) auto 18px;align-items:center;gap:13px;padding:13px;background:#1e2d43;border:1px solid #3b5068;border-radius:9px;color:#ecf4ff;text-align:left}
+.calendarListRow time{font-family:var(--r-head);font-size:21px;font-weight:800;color:var(--r-cyan);text-transform:uppercase;white-space:nowrap}
+.calendarListRow>div{display:flex;flex-direction:column;gap:4px;min-width:0}
+.calendarListRow strong{font-family:var(--r-head);font-size:19px;line-height:1;text-transform:uppercase;white-space:normal;overflow-wrap:anywhere}
+.calendarListRow small{display:inline-flex;align-items:center;gap:5px;color:#a7bdd3;font-size:11px}
+.calendarListRow>.hubStatus{white-space:nowrap}
+/* Responsive: no sideways jumping, readable in the pits at 320px. */
+@media(max-width:1180px){
+ .calendarV21Layout{grid-template-columns:minmax(0,1fr)!important}
+ .calendarV21 .calendarAgenda{display:block}
+ .calendarV21 .calendarAgendaItems{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+ .calendarOverview{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .calendarOverview .calendarNextUp{grid-column:span 3}
+}
+@media(max-width:950px){
+ .hubRaceGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .workspace{padding-inline:19px}
+ .strategyScreen .strategyHeading{align-items:flex-start!important}
+ .raceWizardPage .wizardSteps{overflow-x:auto;scrollbar-width:thin}
+ .raceWizardPage .wizardStep{min-width:105px;flex:none}
+}
+@media(max-width:700px){
+ .workspace{padding:17px 13px 22px}
+ .topbar{padding:10px 13px!important;gap:9px}
+ .brandType strong{font-size:26px!important}
+ .hubHeading{align-items:flex-start;flex-wrap:wrap;gap:10px}
+ .hubHeading h1{font-size:51px!important}
+ .hubHeadingActions{width:100%}
+ .hubHeadingActions button{flex:1;min-width:0}
+ .hubRaceGrid{grid-template-columns:minmax(0,1fr)}
+ .hubRaceCard{min-height:167px!important;padding:16px!important}
+ .hubRaceCard h2{font-size:28px!important}
+ .raceWizardPage .raceHubIntro{flex-direction:column;align-items:stretch;gap:10px}
+ .raceWizardPage .raceHubIntro .quietBtn{align-self:flex-start;min-height:40px}
+ .raceWizardPage .wizardHeadline{padding:13px!important}
+ .raceWizardPage .wizardHeadlineText h2{font-size:22px!important}
+ .raceWizardPage .wizardProgressSummary strong{font-size:24px!important}
+ .raceWizardPage .wizardHeader{padding:14px 13px!important}
+ .raceWizardPage .wizardHeader h2{font-size:24px!important}
+ .raceWizardPage .wizardContent{padding:13px!important}
+ .raceWizardPage .wizardFooter{padding:12px 13px!important}
+ .strategyScreen .strategyHeading h1{font-size:51px!important}
+ .strategyScreen .strategySandbox{gap:10px!important}
+ .strategyScreen .strategyPlanner{padding:13px!important}
+ .strategyScreen .strategyScoreGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .strategyScreen .emptyPlanner{flex-wrap:wrap;gap:10px!important}
+ .strategyScreen .emptyPlanner>div{flex-basis:calc(100% - 55px)}
+ .strategyScreen .emptyPlanner>.solidBtn{width:100%;justify-content:center}
+ .workspace--race .heroMetrics{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+ .workspace--race .heroMetrics>.metric{padding:12px!important;min-height:105px!important}
+ .workspace--race .heroMetrics>.metric:nth-child(3){grid-column:span 2;min-height:92px!important}
+ .workspace--race .heroMetrics .positionValue{font-size:40px!important}
+ .workspace--race .heroMetrics .lapTimeLine strong{font-size:clamp(21px,5vw,29px)!important}
+ .calendarOverview{gap:7px}
+ .calendarOverview>div{padding:10px;min-height:69px}
+ .calendarOverview strong{font-size:29px}
+ .calendarOverview .calendarNextUp strong{font-size:22px}
+ .calendarV21Top{flex-direction:column;align-items:flex-start}
+ .calendarV21 .calendarMain,.calendarV21 .calendarAgenda{padding:11px}
+ .calendarV21 .calendarDay{min-height:73px!important;padding:4px!important}
+ .calendarV21 .calendarDay .calendarDayDate{font-size:17px!important}
+ .calendarV21 .calendarDay .calendarRaceChip{font-size:9px!important;min-height:17px;padding:4px 3px!important}
+ .calendarV21 .calendarAgendaItems{grid-template-columns:1fr}
+}
+@media(max-width:420px){
+ .hubHeading h1,.strategyScreen .strategyHeading h1{font-size:43px!important}
+ .hubRaceCard h2{font-size:25px!important}
+ .calendarLegend{gap:9px;font-size:10px}
+ .calendarGridV21{gap:2px!important}
+ .calendarV21 .calendarDay{min-height:55px!important;padding:3px!important}
+ .calendarV21 .calendarDay .calendarDayDate{font-size:16px!important}
+ .calendarTodayText{display:none}
+ .calendarV21 .calendarDay .calendarRaceChip{padding:2px 3px!important;min-height:5px!important;font-size:0!important;line-height:5px!important;max-height:6px;border-radius:2px!important}
+ .calendarV21 .calendarDay .calendarRaceChip::first-letter{font-size:0!important}
+ .calendarListRow{grid-template-columns:56px minmax(0,1fr) 16px;gap:9px}
+ .calendarListRow>.hubStatus{display:none}
+ .calendarListRow strong{font-size:17px}
+ .calendarV21 .calendarMonthHeading h2{font-size:27px!important}
+ .calendarV21 .calendarMonthActions button{min-width:30px;height:33px;padding:4px}
+ .calendarOverview span{font-size:8px}
+ .strategyScreen .strategyHeading{gap:11px!important}
+ .strategyScreen .strategyHeaderActions{width:100%;display:flex;flex-wrap:wrap;gap:7px}
+ .strategyScreen .strategyHeaderActions button{min-width:0;flex:1}
+ .strategyScreen .plannerActions{flex-wrap:wrap;gap:7px}
+ .strategyScreen .plannerActions button{flex:1;min-width:0}
+ .lapSpotlight{padding:9px 11px!important;gap:9px!important}
+ .lapSpotlight>strong{font-size:23px!important}
+ .workspace--race .heroMetrics .lapTimeLine strong{font-size:21px!important}
+}
+@media(max-width:350px){
+ .calendarV21 .calendarDay{min-height:49px!important}
+ .calendarV21 .calendarDay .calendarDayDate{font-size:14px!important}
+ .calendarOverview{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .calendarOverview .calendarNextUp{grid-column:span 2}
+ .calendarOverview>div:nth-child(3){grid-column:span 2}
+ .workspace--race .heroMetrics{grid-template-columns:minmax(0,1fr)!important}
+ .workspace--race .heroMetrics>.metric:nth-child(3){grid-column:auto}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+/* Guard against the legacy tiny-screen calendar bullet rule. */
+@media(max-width:380px){.calendarV21 .calendarDay button::before{content:none!important}}
+@keyframes pitPanelIn{from{opacity:.55;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.hubRaceGrid .hubRaceCard,.calendarOverview>div,.calendarV21 .calendarMain,.calendarV21 .calendarAgenda,.raceWizardPage .wizardShell{animation:pitPanelIn .22s ease-out both}
+.hubRaceGrid .hubRaceCard:nth-child(2){animation-delay:.045s}
+.hubRaceGrid .hubRaceCard:nth-child(3){animation-delay:.075s}
+@media(prefers-reduced-motion:reduce){.hubRaceGrid .hubRaceCard,.calendarOverview>div,.calendarV21 .calendarMain,.calendarV21 .calendarAgenda,.raceWizardPage .wizardShell{animation:none!important}}

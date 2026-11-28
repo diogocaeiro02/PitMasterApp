@@ -1,6 +1,6 @@
 {
   "name": "pitmaster",
-  "version": "0.20.1",
+  "version": "0.21.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,7 +12,7 @@
     "test:incidents": "node --experimental-strip-types test-incident-signals.mjs",
     "test:rivals": "node --experimental-strip-types test-rival-pace.mjs",
     "test:pit": "node --experimental-strip-types test-pit.mjs",
-    "test": "npm run test:strategy && npm run test:pace && npm run test:rivals && npm run test:incidents && npm run test:pit && npm run test:oracle && npm run test:simulator && npm run test:charts && npm run test:stint-hud && npm run test:projection && npm run test:races && npm run test:racefacer && npm run test:pit-auto && npm run test:stint-alerts && npm run test:celebration && npm run test:phases && npm run test:live-strategy && npm run test:pit-time && npm run test:sprint-preset && npm run test:simulator-session && npm run test:copilot && npm run test:race-navigation",
+    "test": "npm run test:strategy && npm run test:pace && npm run test:rivals && npm run test:incidents && npm run test:pit && npm run test:oracle && npm run test:simulator && npm run test:charts && npm run test:stint-hud && npm run test:projection && npm run test:races && npm run test:racefacer && npm run test:pit-auto && npm run test:stint-alerts && npm run test:celebration && npm run test:phases && npm run test:live-strategy && npm run test:pit-time && npm run test:sprint-preset && npm run test:simulator-session && npm run test:copilot && npm run test:race-navigation && npm run test:ui",
     "test:oracle": "node --experimental-strip-types test-oracle.mjs",
     "test:simulator": "node --experimental-strip-types test-simulator.mjs",
     "test:charts": "node --experimental-strip-types test-chart-data.mjs",
@@ -29,7 +29,8 @@
     "test:sprint-preset": "node --experimental-strip-types test-sprint-preset.mjs",
     "test:simulator-session": "node --experimental-strip-types test-simulator-session.mjs",
     "test:copilot": "node --experimental-strip-types test-copilot.mjs",
-    "test:race-navigation": "node --experimental-strip-types test-race-navigation.mjs"
+    "test:race-navigation": "node --experimental-strip-types test-race-navigation.mjs",
+    "test:ui": "node test-racing-ui.mjs"
   },
   "dependencies": {
     "lucide-react": "^0.468.0",

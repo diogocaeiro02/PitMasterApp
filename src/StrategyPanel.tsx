@@ -139,7 +139,7 @@ export function StrategyPanel({ strategy, onChange, drivers, onAddDriver, onRemo
   return <div className="strategyScreen">
     <div className="strategyHeading">
       <div><div className="overline"><span className="limeDot"/> PITMASTER / RACE PLANNING</div><h1>Estratégia<span>.</span></h1><p>O que já aconteceu fica bloqueado. Planeia ou simula apenas os turnos que faltam.</p></div>
-      <div className="strategyHeaderActions"><button className="quietBtn" onClick={onResetRace}><RotateCcw size={16}/> Reiniciar dados</button><button className="quietBtn" onClick={onBack}><ArrowLeft size={16}/> Voltar à corrida</button></div>
+      <div className="strategyHeaderActions"><button className="quietBtn strategyReset" onClick={onResetRace}><RotateCcw size={16}/> Reiniciar dados</button><button className="quietBtn" onClick={onBack}><ArrowLeft size={16}/> Voltar à corrida</button></div>
     </div>
 
     <section className={`strategySandbox ${draft?'isDraft':''}`}>
@@ -157,12 +157,12 @@ export function StrategyPanel({ strategy, onChange, drivers, onAddDriver, onRemo
       </div>
     </section>
     {confirmMessage&&<p className="strategyHint" role="status">{confirmMessage}</p>}
-    <div className="strategyScoreGrid">
+    {plan.length > 0 && <div className="strategyScoreGrid">
       <div className="strategyScore"><small>STINTS PLANEADOS</small><strong>{plan.length || '—'}</strong><span>Mínimo: {rules.minTeamStints ?? 'por definir'}</span></div>
       <div className="strategyScore"><small>TEMPO DE CONDUÇÃO</small><strong>{plan.length ? raceClock(sumStintMinutes(plan)) : '—'}</strong><span>{rules.raceMinutes === null ? 'Duração da prova não definida' : `Prova: ${raceClock(rules.raceMinutes)}`}</span></div>
       <div className="strategyScore"><small>PARAGENS PLANEADAS</small><strong>{plan.length ? plannedPitStops(plan) : '—'}</strong><span>Mínimo: {rules.minPitStops ?? 'por definir'}</span></div>
       <div className={`strategyScore strategyStatus ${good ? 'statusValid' : errors.length ? 'statusInvalid' : ''}`}><small>ESTADO DO PLANO</small><strong>{good ? 'VALIDADO' : errors.length ? 'REVER' : 'POR DEFINIR'}</strong><span>{good ? 'Cumpre as regras configuradas' : errors.length ? `${errors.length} ponto(s) a verificar` : 'Configura as regras e os turnos'}</span></div>
-    </div>
+    </div>}
 
     <details className="strategyConfigDisclosure">
       <summary><span><ClipboardList size={19}/><strong>Regras e pilotos</strong><small>{drivers.length} pilotos · regras configuradas na preparação da prova</small></span><ArrowDown size={18}/></summary>
@@ -206,7 +206,7 @@ export function StrategyPanel({ strategy, onChange, drivers, onAddDriver, onRemo
             <div className="planRowTools"><button onClick={() => moveStint(idx, -1)} disabled={idx === 0 || finished || running || locked(idx-1)} title="Mover para cima" aria-label={`Subir stint ${idx + 1}`}><ArrowUp size={15}/></button><button onClick={() => moveStint(idx, 1)} disabled={idx === plan.length-1 || finished || running || locked(idx+1)||runningIndex===idx+1} title="Mover para baixo" aria-label={`Descer stint ${idx+1}`}><ArrowDown size={15}/></button><button disabled={finished||running} onClick={() => updatePlan({ ...editing, plan: plan.filter(s => s.id !== stint.id) })} title="Remover stint" aria-label={`Remover stint ${idx+1}`}><Minus size={15}/></button></div>
           </div>
         })}</div>
-      </> : <div className="emptyPlanner"><RotateCcw size={33}/><strong>Estratégia ainda por criar</strong><p>Define as regras e escolhe «Gerar plano equilibrado» ou adiciona stints manualmente.</p></div>}
+      </> : <div className="emptyPlanner"><Flag size={28}/><div><strong>O plano começa aqui</strong><p>Adiciona o primeiro stint ou gera uma distribuição depois de preencheres as regras da prova.</p></div><button type="button" className="solidBtn" onClick={addStint}><Plus size={17}/> Criar primeiro stint</button></div>}
       {plan.length > 0 && <div className={`strategyValidation ${good ? 'good' : 'needsWork'}`}><div className="validationTitle">{good ? <CheckCircle2 size={20}/> : <AlertTriangle size={20}/>}<strong>{good ? 'Plano compatível com as regras configuradas' : 'Pontos a verificar'}</strong></div>{errors.length ? <ul>{errors.map((message, i) => <li key={i}>{message}</li>)}</ul> : <p>{good ? 'Verificações concluídas. Confirma também as regras não configuradas e quaisquer exceções do regulamento.' : 'Preenche as regras principais para validar o plano.'}</p>}{rules.minPitSeconds === null && <p>O tempo de boxes ainda não foi introduzido. O plano não inclui essas paragens no orçamento temporal.</p>}</div>}
     </section>
 

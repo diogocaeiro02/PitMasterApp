@@ -50,6 +50,7 @@ import './style.css'
 import './visual-system.css'
 import './workflow.css'
 import './pitmaster-v20.css'
+import './racing-v21.css'
 
 type Turn = { driver: string; startedAt: number; endedAt?: number }
 type DriverData = { names: string[]; turns: Turn[]; maxMinutes: number }
@@ -685,7 +686,7 @@ function App() {
       <div className="brand" aria-label="Pitmaster">
         <div className="brandMark"><Flag size={22} strokeWidth={2.8}/><span className="markPulse"/></div>
         <div className="brandType"><strong>PIT<span>MASTER</span><span className="brandPeriod">.</span></strong><small>RACE INTELLIGENCE</small></div>
-        <span className="version">BETA / 0.20</span>
+        <span className="version">BETA / 0.21</span>
       </div>
       <nav className={`pageNav ${insideRace ? 'raceNav' : 'hubNav'}`} aria-label={insideRace ? 'Páginas desta prova' : 'Biblioteca de provas'}>
         {insideRace ? <>
